@@ -1,0 +1,6 @@
+%USERPROFILE%\Documents\Promotion\48_Array_Ulbricht-Kugel\2021_04_16x16_0601-0619
+%USERPROFILE%\Documents\Promotion\48_Array_Ulbricht-Kugel\2021_04_0531-0550
+%USERPROFILE%\Downloads\Messungen
+%USERPROFILE%\Downloads\TestExportFolder
+C:\Users\admin\PowerFolders\Praktikum MSc\05 Array Testing\ArrayTesting\Ergebnisse
+%USERPROFILE%\Desktop

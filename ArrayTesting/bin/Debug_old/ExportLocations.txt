@@ -1,0 +1,4 @@
+%USERPROFILE%\Downloads\Messungen
+%USERPROFILE%\Downloads\TestExportFolder
+C:\Users\admin\PowerFolders\Praktikum MSc\05 Array Testing\ArrayTesting\Ergebnisse
+%USERPROFILE%\Desktop

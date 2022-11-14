@@ -1,0 +1,21 @@
+10:49:38 	Initialize the SMILEUSBDeviceclass
+10:49:40 	Initialize the SMILEUSBDevice
+10:49:40 	Successfully connected to COM7
+10:49:40 	Get the hardware information from the device
+10:49:44 	Send Frame 1
+10:49:45 	Try to disconnect from Comport COM7
+10:49:45 	Disconnected from the SMILEUSBDevice on Comport COM7
+10:49:47 	Try to connect automatically
+10:49:47 	Initialize the SMILEUSBDevice
+10:49:47 	Get the hardware information from the device
+10:49:47 	Initialize NVM on microcontroller 0 success
+10:49:47 	Initialize InfoData on microcontroller 0 success
+10:49:47 	Initialize LedDriver on microcontroller 0 success
+10:49:47 	Successfully automatically connected to COM7
+10:49:49 	Set the voltage to 3300mV
+10:49:50 	Send Frame 1
+10:49:50 	Set the voltage to 2800mV
+10:49:51 	Start load Animation
+10:49:52 	Stop load Animation
+10:49:53 	Try to disconnect from Comport COM7
+10:49:53 	Disconnected from the SMILEUSBDevice on Comport COM7

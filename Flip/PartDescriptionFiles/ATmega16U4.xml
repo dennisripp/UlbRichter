@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE Part SYSTEM "part.dtd">
+<Part NAME="ATmega16U4">
+    <USB_PID VALUE="2FF3" />
+    <Memory NAME="FLASH" SIZE="12288" RESET_VALUE="FF" SECURITY="true" />
+    <Memory NAME="EEPROM" SIZE="1024" RESET_VALUE="FF" SECURITY="false" />
+    <Gui FILE="at90usb1287_gui.xml" />
+    <Protocol FILE="USB_DFU_01.xml" />
+</Part>

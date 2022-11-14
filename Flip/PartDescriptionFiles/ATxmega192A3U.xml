@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE Part SYSTEM "part.dtd">
+<Part NAME="ATxmega192A3U">
+	<USB_PID VALUE="2FE7" />
+
+	<Memory NAME="FLASH" SIZE="196608" ADDR="0" />
+
+	<Memory NAME="EEPROM" SIZE="2048" ADDR="0" />
+
+	<Memory NAME="BOOTLOADER" SIZE="3" INDEX="3" />
+
+	<Memory NAME="SIGNATURE" SIZE="4" INDEX="6" />
+
+	<Memory NAME="CONFIGURATION" SIZE="0" />
+
+	<Gui FILE="at90usb1287_gui.xml" />
+
+	<Protocol FILE="USB_DFU_02.xml" />
+</Part>
+

@@ -1,0 +1,26 @@
+2:15:50 	Initialize the SMILEUSBDeviceclass
+2:15:50 	Initialize the SMILEUSBDevice
+2:15:51 	System.TimeoutException: The operation has timed out.
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.Read(Byte[] buffer, Int32 offset, Int32 count)
+   at MicroControlLED_API.USBInterface.ReceiveMsg(Int32 _Count)
+   at MicroControlLED_API.USB_Communication.SMILEUSBDevice.ReceiveMessage(Int32 _Count, Byte _ID)
+2:15:51 	Successfully connected to COM6
+2:15:51 	Get the hardware information from the device
+2:15:51 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht. : 'COM6'
+   at System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   at MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   at MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)
+2:15:52 	System.TimeoutException: The operation has timed out.
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.Read(Byte[] buffer, Int32 offset, Int32 count)
+   at MicroControlLED_API.USBInterface.ReceiveMsg(Int32 _Count)
+   at MicroControlLED_API.USB_Communication.SMILEUSBDevice.ReceiveMessage(Int32 _Count, Byte _ID)
+2:15:52 	Try to disconnect from Comport COM6
+2:15:52 	Disconnected from the SMILEUSBDevice on Comport COM6
+2:15:52 	Try to connect automatically
+2:15:52 	Initialize the SMILEUSBDevice

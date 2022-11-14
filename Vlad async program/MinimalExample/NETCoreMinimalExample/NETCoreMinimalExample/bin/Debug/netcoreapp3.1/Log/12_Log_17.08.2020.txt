@@ -1,0 +1,44 @@
+2:15:25 	Initialize the SMILEUSBDeviceclass
+2:15:25 	Initialize the SMILEUSBDevice
+2:15:25 	Successfully connected to COM4
+2:15:25 	Get the hardware information from the device
+2:15:25 	Send Frame 1
+2:15:25 	Try to disconnect from Comport COM4
+2:15:25 	Disconnected from the SMILEUSBDevice on Comport COM4
+2:15:25 	Try to connect automatically
+2:15:26 	Initialize the SMILEUSBDevice
+2:15:26 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht. : 'COM5'
+   at System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   at MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   at MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)
+2:15:27 	System.TimeoutException: The operation has timed out.
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.Read(Byte[] buffer, Int32 offset, Int32 count)
+   at MicroControlLED_API.USBInterface.ReceiveMsg(Int32 _Count)
+   at MicroControlLED_API.USB_Communication.SMILEUSBDevice.ReceiveMessage(Int32 _Count, Byte _ID)
+2:15:27 	Get the hardware information from the device
+2:15:27 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht. : 'COM5'
+   at System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   at MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   at MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)
+2:15:28 	System.TimeoutException: The operation has timed out.
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.Read(Byte[] buffer, Int32 offset, Int32 count)
+   at MicroControlLED_API.USBInterface.ReceiveMsg(Int32 _Count)
+   at MicroControlLED_API.USB_Communication.SMILEUSBDevice.ReceiveMessage(Int32 _Count, Byte _ID)
+2:15:28 	Successfully automatically connected to COM5
+2:15:28 	Setting the voltage is only possible with an 8x8 device
+2:15:28 	Setting the voltage is only possible with an 8x8 device
+2:15:28 	Start load Animation
+2:15:28 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht. : 'COM5'
+   at System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   at MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   at MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)

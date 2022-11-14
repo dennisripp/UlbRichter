@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE Part SYSTEM "part.dtd">
+<Part NAME="AT90CAN128">
+   <Memory NAME="FLASH" SIZE="122880" RESET_VALUE="FF" SECURITY="true" />
+
+   <Memory NAME="EEPROM" SIZE="4096" RESET_VALUE="FF" SECURITY="true" />
+
+   <Memory NAME="SIGNATURE" SIZE="4" RESET_VALUE="FF" SECURITY="false" />
+
+   <Memory NAME="BOOTINFO" SIZE="3" RESET_VALUE="FF" SECURITY="false" />
+
+   <Memory NAME="BOOTCONFIG" SIZE="10" RESET_VALUE="FF" SECURITY="false" />
+
+   <Memory NAME="REGISTERS" SIZE="256" RESET_VALUE="FF" SECURITY="false" />
+
+   <Gui FILE="at90canxx_gui.xml" />
+
+   <Protocol FILE="CAN_01.xml" />
+</Part>
+

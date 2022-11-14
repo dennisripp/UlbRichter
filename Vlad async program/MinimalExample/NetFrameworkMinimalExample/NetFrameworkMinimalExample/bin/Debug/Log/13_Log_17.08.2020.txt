@@ -1,0 +1,27 @@
+2:55:16 	Initialize the SMILEUSBDeviceclass
+2:55:16 	Initialize the SMILEUSBDevice
+2:55:16 	Successfully connected to COM5
+2:55:16 	Get the hardware information from the device
+2:55:16 	Send Frame 1
+2:55:16 	Try to disconnect from Comport COM5
+2:55:16 	Disconnected from the SMILEUSBDevice on Comport COM5
+2:55:16 	Try to connect automatically
+2:55:16 	Initialize the SMILEUSBDevice
+2:55:17 	Get the hardware information from the device
+2:55:17 	Initialize NVM on microcontroller 0 success
+2:55:17 	Initialize InfoData on microcontroller 0 success
+2:55:17 	Initialize LedDriver on microcontroller 0 success
+2:55:17 	Initialize NVM on microcontroller 1 success
+2:55:17 	Initialize LedDriver on microcontroller 1 success
+2:55:17 	Initialize NVM on microcontroller 2 success
+2:55:17 	No SYNCBYTE detected, byte:0
+2:55:17 	No SYNCBYTE detected, byte:0
+2:55:17 	No SYNCBYTE detected, byte:0
+2:55:17 	Successfully automatically connected to COM4
+2:55:17 	Setting the voltage is only possible with an 8x8 device
+2:55:17 	Send Frame 1
+2:55:17 	Setting the voltage is only possible with an 8x8 device
+2:55:17 	Start load Animation
+2:55:27 	Stop load Animation
+2:55:27 	Try to disconnect from Comport COM4
+2:55:27 	Disconnected from the SMILEUSBDevice on Comport COM4

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE Gui SYSTEM "gui.dtd">
+<Gui>
+   <JPanel NAME="ReadOnlyBytes">
+      <LayoutManager NAME="BoxLayout" AXIS="BoxLayout.Y_AXIS" />
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="5" />
+
+         <JLabel TEXT="Signature Bytes" />
+
+         <JFormattedTextField NAME="manuf_id" COLUMNS="2" TOOLTIP="Manufacturer ID" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="family_code_id" COLUMNS="2" TOOLTIP="Family Code" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="device_name_id" COLUMNS="2" TOOLTIP="Device Name" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="device_rev_id" COLUMNS="2" TOOLTIP="Device Revision" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+      </JPanel>
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="1" />
+
+         <JLabel TEXT="Device Boot Ids" />
+
+         <JFormattedTextField NAME="device_boot_id_1" COLUMNS="2" TOOLTIP="Boot ID 1" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="device_boot_id_2" COLUMNS="2" TOOLTIP="Boot ID 2" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+      </JPanel>
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="1" />
+
+         <JLabel TEXT="Bootloader Ver. " />
+
+         <JTextField NAME="boot_loader_version" COLUMNS="4" TOOLTIP="Bootloader Version" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+      </JPanel>
+
+      <VerticalStrut HEIGHT="130" />
+   </JPanel>
+
+   <Separator />
+
+   <JPanel NAME="startAppli">
+      <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="5" VGAP="5" />
+
+      <JButton NAME="start_appli" TEXT="Start Application" BCOLOR="orange" HANDLER="com.atmel.flip.StartAppliButtonHandler" />
+
+      <JCheckBox NAME="Reset" TEXT="Reset" TOOLTIP="Generates a Wadtchdog Reset Pulse" SELECTED="true" HANDLER="com.atmel.flip.StartAppliResetCheckBoxHandler" />
+   </JPanel>
+</Gui>
+

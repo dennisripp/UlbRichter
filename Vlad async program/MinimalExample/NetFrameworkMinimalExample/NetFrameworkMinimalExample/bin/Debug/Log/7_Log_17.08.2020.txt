@@ -1,0 +1,88 @@
+2:13:27 	Initialize the SMILEUSBDeviceclass
+2:13:27 	Initialize the SMILEUSBDevice
+2:13:27 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht.
+
+   bei System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   bei System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   bei System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)
+2:13:28 	System.TimeoutException: Timeout für den Vorgang wurde überschritten.
+   bei System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   bei System.IO.Ports.SerialPort.Read(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.ReceiveMsg(Int32 _Count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.ReceiveMessage(Int32 _Count, Byte _ID)
+2:13:28 	Successfully connected to COM6
+2:13:28 	Get the hardware information from the device
+2:13:28 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht.
+
+   bei System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   bei System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   bei System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)
+2:13:29 	System.TimeoutException: Timeout für den Vorgang wurde überschritten.
+   bei System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   bei System.IO.Ports.SerialPort.Read(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.ReceiveMsg(Int32 _Count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.ReceiveMessage(Int32 _Count, Byte _ID)
+2:13:29 	Try to disconnect from Comport COM6
+2:13:29 	Disconnected from the SMILEUSBDevice on Comport COM6
+2:13:29 	Try to connect automatically
+2:13:29 	Initialize the SMILEUSBDevice
+2:13:30 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht.
+
+   bei System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   bei System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   bei System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)
+2:13:30 	System.TimeoutException: Timeout für den Vorgang wurde überschritten.
+   bei System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   bei System.IO.Ports.SerialPort.Read(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.ReceiveMsg(Int32 _Count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.ReceiveMessage(Int32 _Count, Byte _ID)
+2:13:30 	Get the hardware information from the device
+2:13:31 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht.
+
+   bei System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   bei System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   bei System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)
+2:13:31 	System.TimeoutException: Timeout für den Vorgang wurde überschritten.
+   bei System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   bei System.IO.Ports.SerialPort.Read(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.ReceiveMsg(Int32 _Count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.ReceiveMessage(Int32 _Count, Byte _ID)
+2:13:31 	Successfully automatically connected to COM6
+2:13:31 	Setting the voltage is only possible with an 8x8 device
+2:13:31 	Setting the voltage is only possible with an 8x8 device
+2:13:31 	Start load Animation
+2:13:32 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht.
+
+   bei System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   bei System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   bei System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)
+2:13:32 	System.IO.IOException: Das Zeitlimit für die Semaphore wurde erreicht.
+
+   bei System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   bei System.IO.Ports.SerialStream.EndWrite(IAsyncResult asyncResult)
+   bei System.IO.Ports.SerialStream.Write(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   bei System.IO.Ports.SerialPort.Write(Byte[] buffer, Int32 offset, Int32 count)
+   bei MicroControlLED_API.USBInterface.SendMessage(Byte[] dataArray, Int32 count)
+   bei MicroControlLED_API.USB_Communication.SMILEUSBDevice.SendMessage(Byte[] _ID, Byte[] _msg)
+2:13:42 	USB port not opened
+2:13:42 	Try to disconnect from Comport COM6
+2:13:42 	USB port not opened

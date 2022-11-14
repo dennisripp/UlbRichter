@@ -1,0 +1,103 @@
+
+<!--
+
+      ======================================
+      DTD for Flip XML Gui Description Files
+      ======================================
+
+-->
+
+<!ELEMENT Gui (JPanel | Separator)*>
+
+<!ELEMENT JPanel (LayoutManager | JPanel | Border | JButton | JRadioButton | JLabel | JFormattedTextField | Separator | JTextField | JCheckBox | HorizontalStrut | VerticalStrut | JComboBox | JSpinner)+>
+<!ATTLIST JPanel NAME CDATA #IMPLIED>
+
+<!ELEMENT Separator EMPTY>
+<!ATTLIST Separator
+    ORIENTATION CDATA #IMPLIED>
+    
+<!ELEMENT LayoutManager EMPTY>
+<!ATTLIST LayoutManager
+    NAME  (BoxLayout | FlowLayout) #REQUIRED
+    AXIS  (BoxLayout.X_AXIS | BoxLayout.Y_AXIS) #IMPLIED
+    ALIGN (FlowLayout.LEFT | FlowLayout.CENTER | FlowLayout.RIGHT) #IMPLIED
+    HGAP  CDATA #IMPLIED
+    VGAP  CDATA #IMPLIED>
+
+<!ELEMENT	Border EMPTY>
+<!ATTLIST	Border
+    TYPE	(LoweredBevel | RaisedBevel | Titled) #REQUIRED
+    TITLE	CDATA	#IMPLIED>
+
+<!ELEMENT JButton EMPTY>
+<!ATTLIST JButton
+	NAME			CDATA #REQUIRED
+    TEXT			CDATA #REQUIRED
+    HANDLER			CDATA #REQUIRED
+    TOOLTIP			CDATA #IMPLIED
+    TOOLTIP_IMAGE	CDATA #IMPLIED
+    BCOLOR			CDATA #IMPLIED
+    FCOLOR			CDATA #IMPLIED>
+
+<!ELEMENT JRadioButton EMPTY>
+<!ATTLIST JRadioButton
+    NAME    CDATA #REQUIRED
+    TEXT    CDATA #REQUIRED
+    HANDLER CDATA #REQUIRED>
+
+<!ELEMENT JLabel EMPTY>
+<!ATTLIST JLabel
+    TEXT CDATA #REQUIRED>
+
+<!ELEMENT JFormattedTextField EMPTY>
+<!ATTLIST JFormattedTextField
+    NAME			CDATA #REQUIRED
+    COLUMNS			CDATA #REQUIRED
+    HANDLER			CDATA #REQUIRED
+    TEXT			CDATA #IMPLIED
+    TOOLTIP			CDATA #IMPLIED
+    TOOLTIP_IMAGE	CDATA #IMPLIED
+    EDITABLE		(true | false) "true">
+
+<!ELEMENT JTextField EMPTY>
+<!ATTLIST JTextField
+    NAME			CDATA #REQUIRED
+    COLUMNS			CDATA #REQUIRED
+    HANDLER			CDATA #REQUIRED
+    TEXT			CDATA #IMPLIED
+    TOOLTIP			CDATA #IMPLIED
+    TOOLTIP_IMAGE	CDATA #IMPLIED
+    EDITABLE		(true | false) "true">
+
+<!ELEMENT JCheckBox EMPTY>
+<!ATTLIST JCheckBox 
+    NAME			CDATA #REQUIRED
+    TEXT			CDATA #REQUIRED
+    HANDLER			CDATA #REQUIRED
+    SELECTED		(true | false) "false"
+    TOOLTIP			CDATA #IMPLIED
+    TOOLTIP_IMAGE	CDATA #IMPLIED>
+
+<!ELEMENT HorizontalStrut EMPTY>
+<!ATTLIST HorizontalStrut
+    WIDTH CDATA #REQUIRED>
+
+<!ELEMENT VerticalStrut EMPTY>
+<!ATTLIST VerticalStrut
+    HEIGHT CDATA #REQUIRED>
+
+<!ELEMENT JSpinner EMPTY>
+<!ATTLIST JSpinner
+    NAME			CDATA #REQUIRED
+    VALUES			CDATA #REQUIRED
+    HANDLER			CDATA #REQUIRED
+    TOOLTIP			CDATA #IMPLIED
+    TOOLTIP_IMAGE	CDATA #IMPLIED>
+
+<!ELEMENT JComboBox EMPTY>
+<!ATTLIST JComboBox
+    NAME			CDATA #REQUIRED
+    VALUES			CDATA #REQUIRED
+    HANDLER			CDATA #REQUIRED
+    TOOLTIP			CDATA #IMPLIED
+    TOOLTIP_IMAGE	CDATA #IMPLIED>

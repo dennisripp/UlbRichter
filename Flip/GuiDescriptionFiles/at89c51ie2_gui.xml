@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE Gui SYSTEM "gui.dtd">
+<Gui>
+   <JPanel NAME="ReadOnlyBytes">
+      <LayoutManager NAME="BoxLayout" AXIS="BoxLayout.Y_AXIS" />
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="5" />
+
+         <JLabel TEXT="Signature Bytes" />
+
+         <JFormattedTextField NAME="manuf_id" COLUMNS="2" TOOLTIP="Manufacturer ID" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="family_code_id" COLUMNS="2" TOOLTIP="Family Code" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="device_name_id" COLUMNS="2" TOOLTIP="Device Name" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="device_rev_id" COLUMNS="2" TOOLTIP="Device Revision" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+      </JPanel>
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="1" />
+
+         <JLabel TEXT="Device Boot Ids" />
+
+         <JFormattedTextField NAME="device_boot_id_1" COLUMNS="2" TOOLTIP="Boot ID 1" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="device_boot_id_2" COLUMNS="2" TOOLTIP="Boot ID 2" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+      </JPanel>
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="1" />
+
+         <JLabel TEXT="Bootloader Ver. " />
+
+         <JTextField NAME="boot_loader_version" COLUMNS="4" TOOLTIP="Bootloader Version" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+      </JPanel>
+   </JPanel>
+
+   <Separator />
+
+   <JPanel NAME="FcbBrv">
+      <LayoutManager NAME="BoxLayout" AXIS="BoxLayout.Y_AXIS" />
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="10" />
+
+         <JLabel TEXT="FCB" />
+
+         <JFormattedTextField NAME="fcb" COLUMNS="2" TOOLTIP="Fuses Configuration Byte" HANDLER="com.atmel.flip.FcbByteHandler" EDITABLE="false" />
+
+         <HorizontalStrut WIDTH="10" />
+
+         <JCheckBox NAME="fcb_7" TEXT="X2" TOOLTIP="X2 Bit Mode" HANDLER="com.atmel.flip.FcbCheckBoxHandler" />
+
+         <HorizontalStrut WIDTH="10" />
+
+         <JLabel TEXT="BRV" />
+
+         <JComboBox NAME="brv" VALUES="0,1,2,3,4,5,6,7" TOOLTIP="Boot Reset Vector" HANDLER="com.atmel.flip.BrvComboHandler" />
+      </JPanel>
+   </JPanel>
+
+   <Separator />
+
+   <JPanel>
+      <LayoutManager NAME="BoxLayout" AXIS="BoxLayout.Y_AXIS" />
+
+      <JPanel NAME="security">
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="10" />
+
+         <JLabel TEXT="Flash" />
+
+         <JComboBox NAME="flash_security" VALUES="0,1,2,3" TOOLTIP="Flash Security Level" HANDLER="com.atmel.flip.FlashSecurityComboHandler" />
+
+         <HorizontalStrut WIDTH="25" />
+
+         <JLabel TEXT="EEPROM" />
+
+         <JComboBox NAME="eeprom_security" VALUES="0,1,2,3" TOOLTIP="Eeprom Security Level" HANDLER="com.atmel.flip.EepromSecurityComboHandler" />
+      </JPanel>
+   </JPanel>
+
+   <Separator />
+
+   <JPanel NAME="startAppliSingle">
+      <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.CENTER" HGAP="5" VGAP="10" />
+
+      <JButton NAME="start_appli" TEXT="Start Application" BCOLOR="orange" HANDLER="com.atmel.flip.StartAppliButtonHandler" />
+   </JPanel>
+</Gui>
+

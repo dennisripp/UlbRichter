@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE Protocol SYSTEM "protocol.dtd">
+<Protocol>
+	<Ptcl NAME="RS232_I03" />
+
+	<Cmd NAME="wfl" VALUE="255" />
+
+	<Cmd NAME="rfl" VALUE="255" />
+
+	<Cmd NAME="stop_bit" VALUE="1" />
+
+	<Cmd NAME="sync" VALUE="U" />
+
+	<Cmd NAME="select_memory_flash"         VALUE=":03000006030000F4" />
+
+	<Cmd NAME="select_memory_eeprom"        VALUE=":03000006030001F3" />
+
+	<Cmd NAME="select_memory_security"      VALUE=":03000006030002F2" />
+
+	<Cmd NAME="select_memory_configuration" VALUE=":03000006030003F1" />
+
+	<Cmd NAME="select_memory_bootloader"    VALUE=":03000006030004F0" />
+
+	<Cmd NAME="select_memory_signature"     VALUE=":03000006030005EF" />
+
+	<Cmd NAME="select_memory_user"          VALUE=":03000006030006EE" />
+	
+	<Cmd NAME="select_memory_int_ram"       VALUE=":03000006030007ED" />
+	
+	<Cmd NAME="select_memory_ext_mem_cs0"   VALUE=":03000006030008EC" />
+	
+	<Cmd NAME="select_memory_ext_mem_cs1"   VALUE=":03000006030009EB" />
+	
+	<Cmd NAME="select_memory_ext_mem_cs2"   VALUE=":0300000603000AEA" />
+	
+	<Cmd NAME="select_memory_ext_mem_cs3"   VALUE=":0300000603000BE9" />
+	
+	<Cmd NAME="select_memory_ext_mem_cs4"   VALUE=":0300000603000CE8" />
+	
+	<Cmd NAME="select_memory_ext_mem_cs5"   VALUE=":0300000603000DE7" />
+	
+	<Cmd NAME="select_memory_ext_mem_cs6"   VALUE=":0300000603000EE6" />
+	
+	<Cmd NAME="select_memory_ext_mem_cs7"   VALUE=":0300000603000FE5" />
+	
+	<Cmd NAME="select_memory_ext_mem_df"    VALUE=":03000006030010E4" />
+	
+	<Cmd NAME="select_memory_page"          VALUE=":040000060301PPPP" />
+
+	<Cmd NAME="read_boot_loader_version" MEM_TYPE="bootloader"
+		VALUE=":050000030000000000F8" />
+
+	<!-- The value of this command is not used. The sole purpose of this cmd
+		is to force a reading of the bootlaoder size.--> 
+		<Cmd NAME="read_boot_loader_size" MEM_TYPE="configuration" VALUE=":0100000300FB" />
+
+	<Cmd NAME="erase"         VALUE=":0200000400FFFB" />
+
+	<Cmd NAME="blank_check"   VALUE=":0500000301PPPPQQQQ" />
+
+	<Cmd NAME="read_memory"   VALUE=":0500000300PPPPQQQQ" />
+
+	<Cmd NAME="program_start" VALUE=":0500000100PPPPQQQQ" />
+
+	<Cmd NAME="writeProtection" VALUE="P" />
+
+	<Cmd NAME="readWriteProtection" VALUE="L" />
+
+	<Cmd NAME="startAppliWithReset"    VALUE=":020000040300F7" />
+
+	<Cmd NAME="startAppliWithoutReset" VALUE=":020000040301F6" />
+</Protocol>
+

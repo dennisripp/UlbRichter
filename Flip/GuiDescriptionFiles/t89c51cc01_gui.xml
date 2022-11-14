@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!DOCTYPE Gui SYSTEM "gui.dtd">
+<Gui>
+   <JPanel NAME="ReadOnlyBytes">
+      <LayoutManager NAME="BoxLayout" AXIS="BoxLayout.Y_AXIS" />
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="5" />
+
+         <JLabel TEXT="Signature Bytes" />
+
+         <JFormattedTextField NAME="manuf_id" COLUMNS="2" TOOLTIP="Manufacturer ID" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="family_code_id" COLUMNS="2" TOOLTIP="Family Code" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="device_name_id" COLUMNS="2" TOOLTIP="Device Name" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="device_rev_id" COLUMNS="2" TOOLTIP="Device Revision" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+      </JPanel>
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="1" />
+
+         <JLabel TEXT="Device Boot Ids" />
+
+         <JFormattedTextField NAME="device_boot_id_1" COLUMNS="2" TOOLTIP="Boot ID 1" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+
+         <JFormattedTextField NAME="device_boot_id_2" COLUMNS="2" TOOLTIP="Boot ID 2" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+      </JPanel>
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="1" />
+
+         <JLabel TEXT="Hardware Byte " />
+
+         <JFormattedTextField NAME="hardware_byte" COLUMNS="2" HANDLER="com.atmel.flip.HwbByteHandler" EDITABLE="false" />
+
+         <JCheckBox NAME="hardware_byte_6" TEXT="BLJB" TOOLTIP="Bootloader Jump Bit" HANDLER="com.atmel.flip.HwbCheckBoxHandler_1" />
+
+         <JCheckBox NAME="hardware_byte_7" TEXT="X2" TOOLTIP="X2 Bit Mode" HANDLER="com.atmel.flip.HwbCheckBoxHandler_1" />
+      </JPanel>
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="1" />
+
+         <JLabel TEXT="Bootloader Ver. " />
+
+         <JTextField NAME="boot_loader_version" COLUMNS="4" TOOLTIP="Bootloader Version" HANDLER="com.atmel.flip.ByteHandler" EDITABLE="false" />
+      </JPanel>
+   </JPanel>
+
+   <Separator />
+
+   <JPanel NAME="CanButton">
+      <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.CENTER" HGAP="5" VGAP="5" />
+
+      <JButton NAME="can" TEXT="CAN" TOOLTIP="Set CAN Node Parameters" HANDLER="com.atmel.flip.CanButtonHandler" />
+   </JPanel>
+
+   <Separator />
+
+   <JPanel NAME="bsb_eb_sbv">
+      <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="5" />
+
+      <JLabel TEXT="BSB / EB / SBV " />
+
+      <JFormattedTextField NAME="bsb" TEXT="XX" COLUMNS="2" TOOLTIP="Boot Status Byte" HANDLER="com.atmel.flip.BsbByteHandler" />
+
+      <JFormattedTextField NAME="eb" TEXT="XX" COLUMNS="2" TOOLTIP="Extra Byte" HANDLER="com.atmel.flip.EbByteHandler" />
+
+      <JFormattedTextField NAME="sbv" TEXT="XX" COLUMNS="2" TOOLTIP="Software Boot Vector" HANDLER="com.atmel.flip.SbvByteHandler" />
+   </JPanel>
+
+   <Separator />
+
+   <JPanel>
+      <LayoutManager NAME="BoxLayout" AXIS="BoxLayout.Y_AXIS" />
+
+      <JPanel>
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" VGAP="5" />
+
+         <JLabel TEXT="Security Level" />
+
+         <JTextField NAME="ssb" COLUMNS="2" TOOLTIP="Software Security Byte" HANDLER="com.atmel.flip.SsbByteHandler" EDITABLE="false" />
+      </JPanel>
+
+      <JPanel NAME="security">
+         <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="2" />
+
+         <JRadioButton NAME="lev0" TEXT="Level 0" HANDLER="com.atmel.flip.SsbRadioButtonHandler_1" />
+
+         <JRadioButton NAME="lev1" TEXT="Level 1" HANDLER="com.atmel.flip.SsbRadioButtonHandler_1" />
+
+         <JRadioButton NAME="lev2" TEXT="Level 2" HANDLER="com.atmel.flip.SsbRadioButtonHandler_1" />
+      </JPanel>
+   </JPanel>
+
+   <Separator />
+
+   <JPanel NAME="startAppli">
+      <LayoutManager NAME="FlowLayout" ALIGN="FlowLayout.LEFT" HGAP="5" VGAP="5" />
+
+      <JButton NAME="start_appli" TEXT="Start Application" BCOLOR="orange" HANDLER="com.atmel.flip.StartAppliButtonHandler" />
+
+      <JCheckBox NAME="Reset" TEXT="Reset" TOOLTIP="Generates a Wadtchdog Reset Pulse" HANDLER="com.atmel.flip.StartAppliResetCheckBoxHandler" />
+   </JPanel>
+</Gui>
+

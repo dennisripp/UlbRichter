@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Part SYSTEM "part.dtd"[]>
+<Part NAME="ATmega64M1">
+    <Memory NAME="FLASH" SIZE="61440" RESET_VALUE="FF" SECURITY="true"
+        ERASE_SELECTED="true" BLANKCHECK_SELECTED="true" PROGRAM_SELECTED="true"
+        VERIFY_SELECTED="true" VISIBLE="true" />
+    <Memory NAME="EEPROM" SIZE="2048" RESET_VALUE="FF" SECURITY="true"
+        ERASE_SELECTED="true" BLANKCHECK_SELECTED="true" PROGRAM_SELECTED="true"
+        VERIFY_SELECTED="true" VISIBLE="true" />
+    <Memory NAME="SIGNATURE" SIZE="4" RESET_VALUE="FF" SECURITY="false"
+        ERASE_SELECTED="true" BLANKCHECK_SELECTED="true" PROGRAM_SELECTED="true"
+        VERIFY_SELECTED="true" VISIBLE="true" />
+    <Memory NAME="BOOTINFO" SIZE="3" RESET_VALUE="FF" SECURITY="false"
+        ERASE_SELECTED="true" BLANKCHECK_SELECTED="true" PROGRAM_SELECTED="true"
+        VERIFY_SELECTED="true" VISIBLE="true" />
+    <Memory NAME="BOOTCONFIG" SIZE="10" RESET_VALUE="FF" SECURITY="false"
+        ERASE_SELECTED="true" BLANKCHECK_SELECTED="true" PROGRAM_SELECTED="true"
+        VERIFY_SELECTED="true" VISIBLE="true" />
+    <Memory NAME="REGISTERS" SIZE="256" RESET_VALUE="FF" SECURITY="false"
+        ERASE_SELECTED="true" BLANKCHECK_SELECTED="true" PROGRAM_SELECTED="true"
+        VERIFY_SELECTED="true" VISIBLE="true" />
+    <Gui FILE="at90canxx_gui.xml" />
+    <Protocol FILE="CAN_01.xml" />
+</Part>

@@ -1,0 +1,248 @@
+﻿<Window x:Class="ArrayTesting.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArrayTesting"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        mc:Ignorable="d"
+        Closing="DataWindow_Closing"
+        Title="Automatisiertes Array-Testing (Ulbricht-Kugel)" Height="540" Width="1306"
+        d:DataContext="{d:DesignInstance local:MainWindow}"
+        Icon="favicon.ico">
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <TabControl HorizontalAlignment="Left" Margin="10,10,0,100" Width="213" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem x:Name="connectTab" Header="Spektrometer" IsSelected="True">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="connectButton" Content="(Neu) Verbinden" HorizontalAlignment="Left" Margin="84,341,0,0" VerticalAlignment="Top" Width="113" Click="Button_Click_3" Background="#FFDFFFCD"/>
+                    <TextBlock x:Name="TextSpecStatus" HorizontalAlignment="Left" Margin="99,10,0,0" TextWrapping="Wrap" Text="warten..." VerticalAlignment="Top" Foreground="#FFC9C9C9" RenderTransformOrigin="0.5,0.5" Width="95"/>
+                    <Label Content="Spektrometer" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Button x:Name="DarkSubButton" Content="Dunkelabzug" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="187" Click="Button_Click_7" BorderBrush="Red" Background="#FFFFBDBD"/>
+                    <CheckBox x:Name="AutoScanSpecCheckBox" Content="Automatisch durchführen" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Foreground="Gray" Width="184" IsChecked="True"/>
+                    <Separator HorizontalAlignment="Left" Height="2" Margin="10,164,0,0" VerticalAlignment="Top" Width="187"/>
+                    <Separator HorizontalAlignment="Left" Height="2" Margin="10,334,0,0" VerticalAlignment="Top" Width="187"/>
+                    <Button x:Name="CalibButton" Content="Kalibration laden" HorizontalAlignment="Left" Margin="10,122,0,0" VerticalAlignment="Top" Width="187" Click="Button_Click_12" Foreground="Black" Background="#FFDDDDDD"/>
+                    <TextBox x:Name="CalibCombo" Margin="10,95,0,0" MaxLines="1" TextChanged="CalibCombo_TextChanged" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="187"/>
+                    <Button x:Name="CreateReference" Content="2. Referenzspektrum aufnehmen" HorizontalAlignment="Left" Margin="10,288,0,0" VerticalAlignment="Top" Width="187" BorderBrush="Red" Background="#FFFFBDBD" Click="SphereMultiButton_Click"/>
+                    <CheckBox x:Name="Durchsatzkorrektur" Content="Referenzspektren nutzen" HorizontalAlignment="Left" Margin="13,312,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,171,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="187"><Run FontWeight="Bold" Text="Referenzmessung "/><Run Text="("/><Run Text="Halogen"/><Run Text="lampe,"/><Run Text=" 150"/><Run Text=" "/><Run Text="ms"/><Run Text=", keine Testquelle installiert"/><Run Text=")"/></TextBlock>
+                    <TextBox x:Name="RefScanBox" HorizontalAlignment="Left" Height="23" Margin="10,208,0,0" VerticalAlignment="Top" Width="187"/>
+                    <CheckBox x:Name="ArrayOffAtDarkScanCheckBox" Content="Array während Dunkelscan aus" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" IsChecked="True" Foreground="Gray"/>
+                    <Button x:Name="RefButton" Content="1. Referenzspektrum laden" HorizontalAlignment="Left" Margin="10,236,0,0" VerticalAlignment="Top" Width="187" Click="Button_Click_13"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,147,0,0" TextWrapping="Wrap" Text="Kalbration:" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="CalFilename" Margin="72,147,10,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="warten "/><Run Text="..."/></TextBlock>
+                    <Button Content="Trennen" HorizontalAlignment="Left" Margin="10,341,0,0" VerticalAlignment="Top" Width="69" Background="#FFFFD7D7" Click="Button_Click_14"/>
+                    <Separator HorizontalAlignment="Left" Height="2" Margin="10,281,0,0" VerticalAlignment="Top" Width="187"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="Referenz"/><Run Text=":"/></TextBlock>
+                    <TextBlock x:Name="RefFile" HorizontalAlignment="Left" Margin="63,260,0,0" TextWrapping="Wrap" Text="warten..." VerticalAlignment="Top"/>
+                </Grid>
+                <!--<Grid Background="#FFE5E5E5"/>-->
+            </TabItem>
+            <TabItem Header="Array" IsSelected="True">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock x:Name="TextArrayStatus" HorizontalAlignment="Left" Margin="102,12,0,0" TextWrapping="Wrap" Text="warten..." VerticalAlignment="Top" Foreground="#FFC9C9C9" RenderTransformOrigin="0.5,0.5" Width="95"/>
+                    <Label Content="µLED-Array" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF8F8F8F" RenderTransformOrigin="0.5,0.5" Width="84"><Run Text="Hardware-"/><Run Text="Info:"/></TextBlock>
+                    <TextBlock x:Name="TextArrayType" Text="warten..." HorizontalAlignment="Left" Margin="102,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF02A8E6" RenderTransformOrigin="0.5,0.5" Width="83"/>
+                    <Slider x:Name="Voltage_Slider" HorizontalAlignment="Left" Margin="10,68,0,0" VerticalAlignment="Top" Width="111" LargeChange="100" SmallChange="50" Value="3300" ValueChanged="Voltage_Slider_ValueChanged" TickPlacement="Both" IsMoveToPointEnabled="True" Height="30" Maximum="4200" Minimum="2500" TickFrequency="100"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,52,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Spannung"/>
+                    <TextBox x:Name="VoltageTextBox" HorizontalAlignment="Left" Height="20" Margin="126,74,0,0" TextWrapping="Wrap" Text="{Binding Value, ElementName=Voltage_Slider}" VerticalAlignment="Top" Width="48" TextAlignment="Right" KeyDown="VoltageTextBox_KeyDown"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="179,74,0,0" TextWrapping="Wrap" Text="mV" VerticalAlignment="Top"/>
+                    <Button x:Name="ArrayOnButton" Content="Ein" HorizontalAlignment="Left" Margin="74,133,0,0" VerticalAlignment="Top" Width="55" Click="Button_Click"/>
+                    <Button Content="Zufällige µLED" HorizontalAlignment="Left" Margin="110,162,0,0" VerticalAlignment="Top" Width="87" Click="Button_Click_1"/>
+                    <Button Content="Pulsieren" HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" Width="95" Click="Button_Click_2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,133,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF8F8F8F" RenderTransformOrigin="0.5,0.5" Width="59" Text="Alle µLEDs"/>
+                    <Button x:Name="ArrayOffButton" Content="Aus" HorizontalAlignment="Left" Margin="142,133,0,0" VerticalAlignment="Top" Width="55" Click="Button_Click9"/>
+                    <Button Content="Trennen" HorizontalAlignment="Left" Margin="10,316,0,0" VerticalAlignment="Top" Width="187" Background="#FFFFD7D7" Click="Button_Click_15"/>
+                    <Button x:Name="ReconnectArrayButton" Content="(Neu) Verbinden" HorizontalAlignment="Left" Margin="10,341,0,0" VerticalAlignment="Top" Width="187" Background="#FFDEFFD7" Click="Button_Click_16"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF8F8F8F" RenderTransformOrigin="0.5,0.5" Width="59"><Run Text="Eine"/><Run Text=" µLED"/></TextBlock>
+                    <TextBox x:Name="Xcol" HorizontalAlignment="Left" Height="20" Margin="98,103,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="20" TextAlignment="Right" KeyDown="SinglePixelKeyDown"/>
+                    <TextBox x:Name="Ylin" HorizontalAlignment="Left" Height="20" Margin="144,103,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="20" TextAlignment="Right" KeyDown="SinglePixelKeyDown"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="74,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="Black" RenderTransformOrigin="0.5,0.5" Width="24"><Run Text="X"/><Run Text=" "/><Run Text=" ="/></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="123,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="Black" RenderTransformOrigin="0.5,0.5" Width="24"><Run Text="Y "/><Run Text="="/></TextBlock>
+                    <Button Content="Los!" HorizontalAlignment="Left" Margin="169,103,0,0" VerticalAlignment="Top" Width="28" Click="Button_Click_18"/>
+                    <Separator HorizontalAlignment="Left" Height="9" Margin="10,124,0,0" VerticalAlignment="Top" Width="187"/>
+                    <Separator HorizontalAlignment="Left" Height="9" Margin="10,153,0,0" VerticalAlignment="Top" Width="187"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="analysisTab" Header="Analyse" IsSelected="True">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="StartScanButton" Content="Einzeln + gesamtes Array scannen" HorizontalAlignment="Left" Margin="10,249,0,0" VerticalAlignment="Top" Width="187" Click="Button_Click_6" Height="21"/>
+                    <ProgressBar x:Name="RoutineProgress" HorizontalAlignment="Left" Height="10" Margin="10,326,0,0" VerticalAlignment="Top" Width="187"/>
+                    <TextBox x:Name="IntegrationTimeTextBox" HorizontalAlignment="Left" Height="20" Margin="10,51,0,0" TextWrapping="Wrap" Text="Integrationszeit" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.511,1.083" KeyDown="IntegrationTimeTextBox_KeyDown"/>
+                    <TextBox x:Name="AveragingTextBox" HorizontalAlignment="Left" Height="20" Margin="10,93,0,0" TextWrapping="Wrap" Text="Mittelwert" VerticalAlignment="Top" Width="90" KeyDown="AveragingTextBox_KeyDown"/>
+                    <TextBlock x:Name="IntTimeText" HorizontalAlignment="Left" Margin="105,52,0,0" TextWrapping="Wrap" Text="..." VerticalAlignment="Top" TextAlignment="Right" Width="71" FontWeight="Bold"/>
+                    <TextBlock x:Name="AvgValueText" HorizontalAlignment="Left" Margin="105,94,0,0" TextWrapping="Wrap" Text="..." VerticalAlignment="Top" TextAlignment="Right" Width="55" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Aufnahmeparameter" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,118,0,0" TextWrapping="Wrap" Text="Scanparameter" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="181,52,0,0" TextWrapping="Wrap" Text="ms" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="165,94,0,0" TextWrapping="Wrap" Text="Scans" VerticalAlignment="Top" Width="32" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="115,31,0,0" TextWrapping="Wrap" Text="Integrationszeit" VerticalAlignment="Top" TextAlignment="Right"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="62,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" TextAlignment="Right"><Run Text="Mittelwertbildung"/><Run Text=" über"/></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="Integrationsgrenzen"/><Run Text=":"/></TextBlock>
+                    <TextBox x:Name="IntegrationLower" HorizontalAlignment="Left" Height="23" Margin="10,221,0,0" TextWrapping="Wrap" Text="400" VerticalAlignment="Top" Width="47"/>
+                    <TextBox x:Name="IntegrationUpper" HorizontalAlignment="Left" Height="23" Margin="104,221,0,0" TextWrapping="Wrap" Text="550" VerticalAlignment="Top" Width="47"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="84,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="bi"/><Run Text="s"/></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="62,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="nm"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="156,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="nm"/>
+                    <TextBox x:Name="DelayTextBox" HorizontalAlignment="Left" Height="23" Margin="77,138,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="29"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,139,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="Array"/><Run Text="-Delay"/></TextBlock>
+                    <CheckBox Content="Auswertung" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top" FontWeight="Bold" IsChecked="True"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right"><Run FontStyle="Italic" Text="mit Enter best. "/><Run Text="↓"/></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="111,139,0,0" TextWrapping="Wrap" Text="ms" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Button x:Name="StopButton" Content="Scan stoppen!" HorizontalAlignment="Left" Margin="10,341,0,0" VerticalAlignment="Top" Width="187" FontWeight="Bold" Foreground="#FFD10000" Click="Button_Click_11"/>
+                    <Button x:Name="VoltageScanButton" Content="Spannungsreihe scannen (nur 8x8)" HorizontalAlignment="Left" Margin="10,301,0,0" VerticalAlignment="Top" Width="187" IsEnabled="False" Click="Button_Click_20"/>
+                    <TextBox x:Name="FromVoltage" HorizontalAlignment="Left" Height="21" Margin="10,275,0,0" TextWrapping="Wrap" Text="3500" VerticalAlignment="Top" Width="32"/>
+                    <TextBox x:Name="ToVoltage" HorizontalAlignment="Left" Height="21" Margin="78,275,0,0" TextWrapping="Wrap" Text="2500" VerticalAlignment="Top" Width="32"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="47,276,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="mV "/><Run Text="-"/></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="115,276,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="mV"/><Run Text=" "/><Run Text="/"/></TextBlock>
+                    <TextBox x:Name="StepVoltage" HorizontalAlignment="Left" Height="20" Margin="146,276,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="26" TextChanged="TextBox_TextChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="177,277,-5,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="mV"/>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+        <StatusBar Height="22" Margin="10,0,10,36" VerticalAlignment="Bottom">
+            <TextBlock TextWrapping="Wrap"><Run Text="Ausgabe"/><Run Text=":"/></TextBlock>
+            <StatusBarItem HorizontalAlignment="Stretch"
+               HorizontalContentAlignment="Stretch">
+                <TextBlock x:Name="ExportPathText" Text="..."/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <Button Content="Erstellen/Öffnen" Click="Button_Click_9" FontSize="9" HorizontalAlignment="Right" Margin="0" HorizontalContentAlignment="Center" />
+            </StatusBarItem>
+        </StatusBar>
+        <StatusBar Height="32" Margin="10,0,10,63" VerticalAlignment="Bottom">
+            <TextBlock TextWrapping="Wrap" FontWeight="Bold"><Run Text="Export"/></TextBlock>
+            <TextBlock TextWrapping="Wrap" FontWeight="Normal" Height="16" Width="41"><Run Text="Ordner"/><Run Text=":"/></TextBlock>
+            <StatusBarItem HorizontalAlignment="Stretch"
+               HorizontalContentAlignment="Stretch">
+                <ComboBox x:Name="ExportComboBox" VerticalAlignment="Top" IsEditable="True" TextBoxBase.TextChanged="ExportComboBox_TextChanged"/>
+            </StatusBarItem>
+        </StatusBar>
+        <StatusBar Height="22" Margin="10,10,10,10" VerticalAlignment="Bottom">
+            <StatusBarItem HorizontalAlignment="Stretch"
+               HorizontalContentAlignment="Stretch">
+                <TextBlock x:Name="InfoMessage" TextWrapping="Wrap"/>
+            </StatusBarItem>
+        </StatusBar>
+        <TabControl Margin="0,10,10,100" HorizontalAlignment="Right" Width="270">
+            <TabItem Header="Ausgabe">
+                <Grid Background="#FFE5E5E5">
+                    <Button Content="Einzelspektrum" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Click="Button_Click_8" Margin="164,186,0,0" RenderTransformOrigin="1.267,-6.833"/>
+                    <TextBox x:Name="SerialTextBox" HorizontalAlignment="Left" Height="20" Margin="33,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="157" TextChanged="SerialTextBox_TextChanged"/>
+                    <TextBox x:Name="VoltagePostfix" HorizontalAlignment="Left" Height="20" Margin="195,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="56" IsEnabled="False" TextChanged="VoltagePostfix_TextChanged"/>
+                    <CheckBox x:Name="TimeFilenameCheckBox" Content="Zeitstempel integrieren" HorizontalAlignment="Left" Margin="10,146,0,0" VerticalAlignment="Top" IsChecked="True" Height="16" Checked="TimeFilenameCheckBox_Toggled" Unchecked="TimeFilenameCheckBox_Toggled"/>
+                    <CheckBox x:Name="FileExportCheckBox" Content="Dateiausgabe aktivieren" HorizontalAlignment="Left" Margin="10,166,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                    <Button x:Name="StartStop" Content="Start/Stop" HorizontalAlignment="Left" Margin="179,341,0,0" VerticalAlignment="Top" Width="75" Click="StartStop_Click"/>
+                    <Slider x:Name="IntTimeSlider" HorizontalAlignment="Left" Margin="16,341,0,0" VerticalAlignment="Top" Width="156" Height="26" Minimum="150" Maximum="2000" SmallChange="1" TickPlacement="BottomRight" Value="1000" ValueChanged="IntTimeSlider_ValueChanged"/>
+                    <Button Content="Dunkelrauschen" HorizontalAlignment="Left" Margin="10,186,0,0" VerticalAlignment="Top" Width="97" Click="Button_Click_17"/>
+                    <TextBox x:Name="Output" HorizontalAlignment="Left" Height="124" Margin="10,212,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="244"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="Seriennummer"/><Run Text=" "/><Run Text="("/><Run Text="wird Dateio"/><Run Text="rdner)"/></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="LED-Größe"/>
+                    <TextBox x:Name="LEDSizeBox" HorizontalAlignment="Left" Height="20" Margin="10,77,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="99,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Pitch"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="188,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Wellenlänge" Width="66"/>
+                    <TextBox x:Name="PitchBox" HorizontalAlignment="Left" Height="20" Margin="99,77,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
+                    <TextBox x:Name="WavelengthBox" HorizontalAlignment="Left" Height="20" Margin="188,77,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="43"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,107,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Spannung" Width="77"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="236,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="nm" Width="18"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="188,109,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" FontSize="10"><Run Text="("/><Run Text="nur 16x16"/><Run Text=")"/></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="68,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="µm" Width="19"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="154,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="µm" Width="19"/>
+                    <RadioButton x:Name="Voltage33" Content="3,3 V" HorizontalAlignment="Left" Margin="87,108,0,0" VerticalAlignment="Top" IsEnabled="False" Checked="Voltage33_Checked"/>
+                    <RadioButton x:Name="Voltage50" Content="5 V" HorizontalAlignment="Left" Margin="137,108,0,0" VerticalAlignment="Top" IsEnabled="False" Checked="Voltage50_Checked"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,32,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="16"><Run Text="S"/><Run Text="N"/></TextBlock>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Optionen">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Dmp" IsEnabled="False">
+                <Grid Background="#FFE5E5E5">
+                    <Button Content="USB-Geräte&#xA;ausgeben" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_4" Height="39"/>
+                    <Button x:Name="BitchButton1" Content="BitchButton" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="BitchButton_Click"/>
+                    <Button Content="Belichtungs-&#xA;reihe 100avg " HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_10" Height="39"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="11,119,0,0" TextWrapping="Wrap" Text="Leistung:" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="OutputText" HorizontalAlignment="Left" Margin="11,135,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="..." Width="79" TextAlignment="Right"/>
+                    <CheckBox x:Name="DsTest" Content="HasDarkScan" HorizontalAlignment="Left" Margin="32,252,0,0" VerticalAlignment="Top" IsChecked="{Binding integratingSphere.HasDarkScan}"/>
+                    <Button Content="Alle Pixel gleichzeitig scannen" HorizontalAlignment="Left" Margin="11,158,0,0" VerticalAlignment="Top" Width="187" Height="20" Foreground="#FFDDDDDD"/>
+                    <Button Content="Alle Pixel einzeln scannen" HorizontalAlignment="Left" Margin="11,208,0,0" VerticalAlignment="Top" Width="187" Foreground="#FFDDDDDD"/>
+                    <Button Content="Heatmap2png" HorizontalAlignment="Left" Margin="145,16,0,0" VerticalAlignment="Top" Width="91" Click="Button_Click_19"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <TabControl Margin="228,10,680,100">
+            <TabItem Header="µLED-Array">
+                <Grid x:Name="HeatmapGrid" Background="#FFE5E5E5">
+                    <lvc:CartesianChart DataTooltip="{x:Null}" Margin="10">
+                        <lvc:CartesianChart.Series>
+                            <lvc:HeatSeries x:Name="HeatSeries" Values="{Binding Values}" DataLabels="True" FontSize="8">
+                                <!--
+                    The GradientStopCollection is optional to define a custom gradient
+                    If this property is not specified, LiveCharts will set a gradient
+                    -->
+                                <lvc:HeatSeries.GradientStopCollection>
+                                    <GradientStop Offset="0" Color="Black"/>
+                                    <GradientStop Offset=".25" Color="DarkGray"/>
+                                    <GradientStop Offset=".5" Color="Red"/>
+                                    <!--<GradientStop Offset=".50" Color="Blue"></GradientStop>-->
+                                    <GradientStop Offset=".75" Color="#FF0000FF"/>
+                                    <GradientStop Offset="1" Color="#FF27F9F0"/>
+                                </lvc:HeatSeries.GradientStopCollection>
+                            </lvc:HeatSeries>
+                        </lvc:CartesianChart.Series>
+                        <lvc:CartesianChart.AxisX >
+                            <lvc:Axis x:Name="HeatmapX" ShowLabels="True" Labels="{Binding xAxis}" LabelsRotation="0" MinValue="0" MaxValue="16" Title="Pixel">
+                                <lvc:Axis.Separator>
+                                    <lvc:Separator Step="1"/>
+                                </lvc:Axis.Separator>
+                            </lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis x:Name="HeatmapY" ShowLabels="True" Labels="{Binding yAxis}"  MinValue="0" MaxValue="16">
+                                <lvc:Axis.Separator>
+                                    <lvc:Separator Step="1"/>
+                                </lvc:Axis.Separator>
+                            </lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <TabControl HorizontalAlignment="Right" Margin="0,10,285,100" Width="390">
+            <TabItem Header="Spektrum LivePlot">
+                <Grid Background="#FFE5E5E5">
+                    <lvc:CartesianChart x:Name="SpectrumPlot" Series="{Binding SerCol}" LegendLocation="None" DataTooltip="{x:Null}" Margin="10" Hoverable="False" DisableAnimations="True">
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Spektrale Leistung [µW/nm]" LabelFormatter="{Binding YFormatter}"/>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Wellenlänge [nm]" ShowLabels="True" Labels="{Binding Labels}" LabelsRotation="0" MinValue="300" MaxValue="600">
+                                <lvc:Axis.Separator>
+                                    <lvc:Separator Step="100"/>
+                                </lvc:Axis.Separator>
+                            </lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Spektrum ScottPlot" IsEnabled="False">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
