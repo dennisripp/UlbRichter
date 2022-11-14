@@ -1,0 +1,17 @@
+Debug/
+Release/
+bin/
+obj/
+.vs/
+Flip/
+packages/
+ArrayTesting/bin/
+ArrayTesting/obj/
+
+UlbRichter/bin/
+UlbRichter/obj/
+UlbRichter/.vs/
+UlbRichter/Flip/
+UlbRichter/packages/
+UlbRichter/ArrayTesting/bin/
+UlbRichter/ArrayTesting/obj/
