@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArrayTesting"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:controls="clr-namespace:Enterwell.Clients.Wpf.Notifications.Controls;assembly=Enterwell.Clients.Wpf.Notifications"
         mc:Ignorable="d"
         Closing="DataWindow_Closing"
         Title="Automatisiertes Array-Testing (Ulbricht-Kugel)" Height="540" Width="1306"
@@ -14,6 +15,10 @@
         <local:MainViewModel/>
     </Window.DataContext>
     <Grid>
+        <Border x:Name="NotificationContainer" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="1"  Panel.ZIndex="4"  HorizontalAlignment="Center" Width="400" VerticalAlignment="Top" >
+            <controls:NotificationMessageContainer Manager="{Binding Manager}"/>
+        </Border>
+
         <TabControl HorizontalAlignment="Left" Margin="10,10,0,100" Width="213" SelectionChanged="TabControl_SelectionChanged">
             <TabItem x:Name="connectTab" Header="Spektrometer" IsSelected="True">
                 <Grid Background="#FFE5E5E5">
@@ -59,8 +64,8 @@
                     <Button Content="Pulsieren" HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" Width="95" Click="Button_Click_2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,133,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF8F8F8F" RenderTransformOrigin="0.5,0.5" Width="59" Text="Alle µLEDs"/>
                     <Button x:Name="ArrayOffButton" Content="Aus" HorizontalAlignment="Left" Margin="142,133,0,0" VerticalAlignment="Top" Width="55" Click="Button_Click9"/>
-                    <Button Content="Trennen" HorizontalAlignment="Left" Margin="10,316,0,0" VerticalAlignment="Top" Width="187" Background="#FFFFD7D7" Click="Button_Click_15"/>
-                    <Button x:Name="ReconnectArrayButton" Content="(Neu) Verbinden" HorizontalAlignment="Left" Margin="10,341,0,0" VerticalAlignment="Top" Width="187" Background="#FFDEFFD7" Click="Button_Click_16"/>
+                    <Button Content="Trennen" HorizontalAlignment="Left" Margin="10,316,0,0" VerticalAlignment="Top" Width="187" Background="#FFFFD7D7" Click="Button_Click_ArrayShutdown"/>
+                    <Button x:Name="ReconnectArrayButton" Content="(Neu) Verbinden" HorizontalAlignment="Left" Margin="10,341,0,0" VerticalAlignment="Top" Width="187" Background="#FFDEFFD7" Click="Button_Click_ArrayReconnect"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="#FF8F8F8F" RenderTransformOrigin="0.5,0.5" Width="59"><Run Text="Eine"/><Run Text=" µLED"/></TextBlock>
                     <TextBox x:Name="Xcol" HorizontalAlignment="Left" Height="20" Margin="98,103,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="20" TextAlignment="Right" KeyDown="SinglePixelKeyDown"/>
                     <TextBox x:Name="Ylin" HorizontalAlignment="Left" Height="20" Margin="144,103,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="20" TextAlignment="Right" KeyDown="SinglePixelKeyDown"/>

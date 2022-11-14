@@ -19,6 +19,8 @@ namespace ArrayTesting
         UInt32 IntTime = 150; /// Value of integration time [ms]
         UInt32 Avg = 1; /// Number of scans to average per acquisition
         bool SpecConnected = false;
+
+        MainWindow mwd { get; set; }
         public bool HasDarkScan = false;
         char[] DevList;
         double[] DataAbsoluteX { get; set; }
@@ -74,6 +76,8 @@ namespace ArrayTesting
         [DllImport("C:\\Program Files (x86)\\International Light\\SpectrlLight III\\SpectrILightC.dll")]
         private extern static Int32 ILT900_API_GetColor_Duv(Int32 DevIdx, double[] XYZ, Int32 len);
 
+        private bool SpectreLightInstalled { get; set; }
+
         public IntegratingSphere()
         {
             DevList = new char[len];
@@ -96,17 +100,61 @@ namespace ArrayTesting
                 }
 
                 ILT900_API_SetIntTime(DevIdx, IntTime);
-                ILT900_API_SetScanAvg(DevIdx, Avg);            
-            } catch(System.DllNotFoundException e)
-            {
-                MessageBox.Show("SpectrlLight III not installed. Abort.");
-            }
+                ILT900_API_SetScanAvg(DevIdx, Avg);
+                SpectreLightInstalled = true;
 
-            
+            }
+            catch (System.DllNotFoundException e)
+            {
+                SpectreLightInstalled = false;
+
+                MessageBox.Show("SpectrlLight III not installed.");
+            }    
+        }
+
+        public IntegratingSphere(MainWindow _mwd)
+        {
+            mwd = _mwd;
+            DevList = new char[len];
+            DataAbsoluteX = new double[NumPx];
+            DataAbsoluteY = new double[NumPx];
+            DataDarkX = new double[NumPx];
+            DataDarkY = new double[NumPx];
+            DataRawX = new double[NumPx];
+            DataRawY = new double[NumPx];
+            DataRelativeX = new double[NumPx];
+            DataRelativeY = new double[NumPx];
+            CRI = new double[16];
+            XYZ = new double[3];
+
+            try
+            {
+                if (ILT900_API_Open(DevList, len) == 0)
+                {
+                    SpecConnected = true;
+                }
+
+                ILT900_API_SetIntTime(DevIdx, IntTime);
+                ILT900_API_SetScanAvg(DevIdx, Avg);
+                SpectreLightInstalled = true;
+
+            }
+            catch (System.DllNotFoundException)
+            {
+                SpectreLightInstalled = false;
+
+                mwd.spectreNotInstalledNotification();
+            }
         }
 
         public void SetIntTime(int IntTime)
         {
+            if (!SpectreLightInstalled)
+            {
+                mwd.spectreNotInstalledNotification();
+                return;
+            }
+
             this.IntTime = (UInt32)IntTime;
             ILT900_API_SetIntTime(DevIdx, (UInt32)IntTime);
             HasDarkScan = false;
@@ -114,13 +162,25 @@ namespace ArrayTesting
         
         public void SetScanAvg(int Avg)
         {
+            if (!SpectreLightInstalled)
+            {
+                mwd.spectreNotInstalledNotification();
+                return;
+            }
+
             this.Avg = (UInt32)Avg;
             ILT900_API_SetScanAvg(DevIdx, (UInt32)Avg);
             HasDarkScan = false; // unsure if...
+                  
         }
 
         public async Task SingleScan()
         {
+            if (!SpectreLightInstalled)
+            {
+                mwd.spectreNotInstalledNotification();
+                return;
+            }
             Task ScanTask = Task.Factory.StartNew(() => ILT900_API_SingleScan());
             await ScanTask;
             //ILT900_API_GetAbsoluteData(DevIdx, DataAbsoluteY, DataAbsoluteX, NumPx, NumPx);
@@ -129,12 +189,15 @@ namespace ArrayTesting
 
         public async Task DarkScan()
         {
-            if (SpecConnected)
+            if (!SpectreLightInstalled)
             {
-                Task ScanTask = Task.Factory.StartNew(() => ILT900_API_DarkScan());
-                await ScanTask;
-                HasDarkScan = true;
+                mwd.spectreNotInstalledNotification();
+                return;
             }
+
+            Task ScanTask = Task.Factory.StartNew(() => ILT900_API_DarkScan());
+            await ScanTask;
+            HasDarkScan = true;
         }
 
         // calibration file needs to be of the same wavelength division as sensor
@@ -280,12 +343,24 @@ namespace ArrayTesting
 
         public double GetScanDataAbsoluteAt(int index)
         {
+            if (!SpectreLightInstalled)
+            {
+                mwd.spectreNotInstalledNotification();
+                return -1;
+            }
+
             ILT900_API_GetAbsoluteData(DevIdx, DataAbsoluteY, DataAbsoluteX, NumPx, NumPx);
             return DataAbsoluteY[index];
         }
 
         public int DisconnectIntegratingSphere()
         {
+            if (!SpectreLightInstalled)
+            {
+                mwd.spectreNotInstalledNotification();
+                return -1;
+            }
+
             HasDarkScan = false;
             if (ILT900_API_Close() == 0)
             {

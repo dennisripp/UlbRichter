@@ -21,6 +21,7 @@ using LiveCharts.Wpf;
 using System.Timers;
 using System.Linq;
 using System.Windows.Media.Imaging;
+using Enterwell.Clients.Wpf.Notifications;
 
 namespace ArrayTesting
 {
@@ -38,6 +39,7 @@ namespace ArrayTesting
         ExportPathGenerator expPathGen = new ExportPathGenerator();
         CancellationTokenSource cts = new CancellationTokenSource();
         private static System.Timers.Timer aTimer, bTimer;
+        public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
 
         //public ChartValues<HeatPoint> Values { get; set; }
         public SeriesCollection SerCol { get; set; }
@@ -83,6 +85,26 @@ namespace ArrayTesting
             });
         }
 
+        public void spectreNotInstalledNotification()
+        {
+            Action invokeNotifification = () =>
+            {
+                Manager.CreateMessage()
+                              //  .Accent(new Brush());
+                              .Dismiss().WithDelay(3000)
+                              .Background("#1f1f1f")
+                              .HasHeader($"SpectrlLight III not installed.")
+                              .HasBadge("Error")
+                              .Animates(true)
+                              .AnimationInDuration(1)
+                              .AnimationOutDuration(1)
+                              .HasMessage($"Application not working")
+                              .Dismiss().WithButton("Close", button => { })
+                              .Queue();
+            };
+            Application.Current.Dispatcher.BeginInvoke(invokeNotifification);
+          
+        }
 
         private async void Initialize()
         {
@@ -142,29 +164,36 @@ namespace ArrayTesting
             
         }
 
-        void UpdateArrayText()
+        private void UpdateArrayText()
         {
-            if (ArrayConnectStatus)
+            Action invokeNotifification = () =>
             {
-                //this.Dispatcher.Invoke(() =>
-                //{
-                TextArrayStatus.Text = "Verbunden";
-                TextArrayStatus.Foreground = Brushes.Green;
-                TextArrayType.Text = sMILEUSBDevice.Hardware.ToString();
-                //});
-            }
-            else
-            {
-                //this.Dispatcher.Invoke(() =>
-                //{
-                TextArrayStatus.Text = "Getrennt";
-                TextArrayStatus.Foreground = Brushes.Red;
-                //});
-            }
+                
+           
+                if (ArrayConnectStatus)
+                {
+                    //this.Dispatcher.Invoke(() =>
+                    //{
+                    TextArrayStatus.Text = "Verbunden";
+                    TextArrayStatus.Foreground = Brushes.Green;
+                    TextArrayType.Text = sMILEUSBDevice.Hardware.ToString();
+                    //});
+                }
+                else
+                {
+                    //this.Dispatcher.Invoke(() =>
+                    //{
+                    TextArrayStatus.Text = "Getrennt";
+                    TextArrayStatus.Foreground = Brushes.Red;
+                    //});
+                }
+            };
+            Application.Current.Dispatcher.BeginInvoke(invokeNotifification);
         }
 
         async void UpdateSpecText()
         {
+
             if (integratingSphere != null) // is null during init
             {
                 if (integratingSphere.IsConnected())
@@ -186,28 +215,35 @@ namespace ArrayTesting
 
         void UpdateSpecInfo()
         {
-            if (integratingSphere != null)
+
+            Action invokeNotifification = () =>
             {
-                // connection status
-                if (integratingSphere.IsConnected())
+
+                if (integratingSphere != null)
                 {
-                    TextSpecStatus.Text = "Verbunden";
-                    TextSpecStatus.Foreground = Brushes.Green;
+                    // connection status
+                    if (integratingSphere.IsConnected())
+                    {
+                        TextSpecStatus.Text = "Verbunden";
+                        TextSpecStatus.Foreground = Brushes.Green;
+                    }
+                    else
+                    {
+                        Durchsatzkorrektur.IsChecked = false;
+                        Durchsatzkorrektur.IsEnabled = false;
+                        CreateReference.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FFFFBDBD"));
+                        CreateReference.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FFFF0000"));
+
+                        TextSpecStatus.Text = "Getrennt";
+                        TextSpecStatus.Foreground = Brushes.Red;
+                    }
+
+                    UpdateDarkScanStatus();
+
                 }
-                else
-                {
-                    Durchsatzkorrektur.IsChecked = false;
-                    Durchsatzkorrektur.IsEnabled = false;
-                    CreateReference.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FFFFBDBD"));
-                    CreateReference.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FFFF0000"));
-
-                    TextSpecStatus.Text = "Getrennt";
-                    TextSpecStatus.Foreground = Brushes.Red;
-                }
-
-                UpdateDarkScanStatus();
-
-            }
+            };
+            Application.Current.Dispatcher.BeginInvoke(invokeNotifification);
+         
         }
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
@@ -215,11 +251,19 @@ namespace ArrayTesting
             SpecRemovalChecker();
         }
 
-        private void InitArray(int voltage)
+        private async void InitArray(int voltage)
         {
             sMILEUSBDevice = new SMILEUSBDevice();
-            sMILEUSBDevice.Connect("Quadrat");
-            ArrayConnectStatus = sMILEUSBDevice.Connect(null);
+            List<string> Comportlist = SMILEUSBDevice.GetComPorts();
+
+            foreach (string com in Comportlist)
+            {
+                Action Invoke = () =>
+                {
+                    ArrayConnectStatus = sMILEUSBDevice.Connect(com);
+                };
+                await System.Windows.Application.Current.Dispatcher.BeginInvoke(Invoke);
+            }
             
             if (ArrayConnectStatus)
             {
@@ -325,7 +369,7 @@ namespace ArrayTesting
         {
             Task t = Task.Run(() =>
             {
-                integratingSphere = new IntegratingSphere();
+                integratingSphere = new IntegratingSphere(this);
             }); 
 
             string[] config = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + @"\config.ini");
@@ -1430,12 +1474,12 @@ namespace ArrayTesting
             await SpecShutdown();
         }
 
-        private async void Button_Click_15(object sender, RoutedEventArgs e)
+        private async void Button_Click_ArrayShutdown(object sender, RoutedEventArgs e)
         {
             await ArrayShutdown();
         }
 
-        private async void Button_Click_16(object sender, RoutedEventArgs e)
+        private async void Button_Click_ArrayReconnect(object sender, RoutedEventArgs e)
         {
             ReconnectArrayButton.IsEnabled = false;
             await ArrayShutdown();
