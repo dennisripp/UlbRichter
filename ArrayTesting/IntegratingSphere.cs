@@ -34,8 +34,8 @@ namespace ArrayTesting
         double[] CRI;
         double[] XYZ;
 
-        double[] CalibrationX;
-        double[] CalibrationY;
+        double[] CalibrationX { get; set; }
+        double[] CalibrationY { get; set; }
 
         double[] ReferenceEmtpyY;
         double[] ReferenceLoadedY;
@@ -285,6 +285,12 @@ namespace ArrayTesting
         // uses global variables
         public double[] GetCalibratedAbsoluteDataY(bool useReferenceCorr)
         {
+
+            //if (CalibrationY is null)
+            //{
+            //    mwd.customErrorNotification("fatal error", "CalibrationY not initialized");
+            //    return new double[0];
+            //}
 
             double[] AbsoluteY = new double[NumPx];
 

@@ -146,3 +146,7 @@ C:\Users\Dennis\Desktop\QD_UK\UlbRichter\ArrayTesting\obj\Debug\ArrayTesting.csp
 C:\Users\Dennis\Desktop\QD_UK\UlbRichter\ArrayTesting\obj\Debug\ArrayTesting.exe
 C:\Users\Dennis\Desktop\QD_UK\UlbRichter\ArrayTesting\obj\Debug\ArrayTesting.pdb
 C:\Users\Dennis\Desktop\QD_UK\UlbRichter\ArrayTesting\bin\Debug\Enterwell.Clients.Wpf.Notifications.dll
+C:\Users\Dennis\Desktop\QD_UK\UlbRichter\ArrayTesting\bin\Debug\calib\ILT1810343U1INS250N.cal
+C:\Users\Dennis\Desktop\QD_UK\UlbRichter\ArrayTesting\bin\Debug\calib\ILT1810343U1INS250N.txt
+C:\Users\Dennis\Desktop\QD_UK\UlbRichter\ArrayTesting\bin\Debug\calib\Ref1000avg150msPortZu.txt
+C:\Users\Dennis\Desktop\QD_UK\UlbRichter\ArrayTesting\obj\Debug\ArrayTesting_Content.g.cs
