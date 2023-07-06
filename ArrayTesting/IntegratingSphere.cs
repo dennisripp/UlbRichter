@@ -108,7 +108,7 @@ namespace ArrayTesting
             {
                 SpectreLightInstalled = false;
 
-                MessageBox.Show("SpectrlLight III not installed.");
+                MessageBox.Show($"SpectrlLight III not installed. Error: {e}");
             }    
         }
 

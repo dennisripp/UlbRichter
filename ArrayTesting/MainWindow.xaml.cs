@@ -24,6 +24,8 @@ using System.Windows.Media.Imaging;
 using Enterwell.Clients.Wpf.Notifications;
 using System.Reflection;
 
+
+
 namespace ArrayTesting
 {
     /// <summary>
@@ -36,18 +38,36 @@ namespace ArrayTesting
         private IntegratingSphere integratingSphere;
         bool[,] EmptyFrame;
         bool[,] FullFrame;
-        int arraySize = 16;
+        int arraySize = 8;
         ExportPathGenerator expPathGen = new ExportPathGenerator();
         CancellationTokenSource cts = new CancellationTokenSource();
-        private static System.Timers.Timer aTimer, bTimer;
+        private static System.Timers.Timer bTimer;
         public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
 
         //public ChartValues<HeatPoint> Values { get; set; }
-        public SeriesCollection SerCol { get; set; }
+        public static SeriesCollection SerCol { get; set; }
         public ScatterSeries MyScatter { get; set; }
         public string[] xAxis { get; set; }
         public string[] yAxis { get; set; }
         public Func<double, string> YFormatter { get; set; }
+
+        public bool DEVICES_READY => ArrayConnectStatus && !(integratingSphere is null) && integratingSphere.IsConnected();
+
+        const string folderName = "calib";
+
+        static string currentLoc = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
+        static Dictionary<string, string> fileNames = new Dictionary<string, string>
+            {
+                { "calibration", "ILT1810343U1INS250N.txt" },
+                { "reference", "Ref1000avg150msPortZu.txt" }
+            };
+
+        static Dictionary<string, string> filePaths = new Dictionary<string, string>
+            {
+                { "calibration", $@"{currentLoc}\{folderName}\{fileNames["calibration"]}" },
+                { "reference", $@"{currentLoc}\{folderName}\{fileNames["reference"]}" }
+            };
 
         public MainWindow()
         {
@@ -90,6 +110,8 @@ namespace ArrayTesting
 
         private async void Initialize()
         {
+            BackgroundWorkerStart();
+
             SMILEUSBDevice.deviceInitializedFired += deviceInitializedEventHandler;
 
             int voltage = (int)Voltage_Slider.Value;
@@ -97,13 +119,6 @@ namespace ArrayTesting
             Task InitSpecTask = Task.Run(() => InitSpecAsync());
 
             // do SLOW work here...
-
-            aTimer = new System.Timers.Timer
-            {
-                Interval = 2000
-            };
-
-            aTimer.Elapsed += OnTimedEvent;
 
             bTimer = new System.Timers.Timer
             {
@@ -117,7 +132,6 @@ namespace ArrayTesting
                 exportLocations[i] = Environment.ExpandEnvironmentVariables(exportLocations[i]);
             }
             ExportComboBox.ItemsSource = exportLocations;
-            ExportComboBox.SelectedIndex = 1;
             ExportComboBox.SelectedIndex = 0;
             UpdateExportPath();
 
@@ -125,13 +139,12 @@ namespace ArrayTesting
             UpdateArrayText();
 
             await InitSpecTask;
-            aTimer.Enabled = true;
             UpdateSpecText();
         }
 
         private async void OnTimedEvent2(object sender, ElapsedEventArgs e)
         {
-            if (integratingSphere != null)
+            if (integratingSphere != null && integratingSphere.IsConnected())
             {
                 bool b = false;
                 this.Dispatcher.Invoke(() =>
@@ -204,31 +217,16 @@ namespace ArrayTesting
          
         }
 
-        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            SpecRemovalChecker();
-        }
-
-
         private async Task InitSpecAsync()
         {
             Task t = Task.Run(() =>
             {
                 integratingSphere = new IntegratingSphere(this);
-            }); 
+            });
 
             string[] config = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + @"\config.ini");
 
-            //  string calPath = @"C:\Users\admin\PowerFolders\Praktikum MSc\05 Array Testing\ILT1810343U1INS250N.txt";
-            // string refPath = @"C:\Users\admin\PowerFolders\Praktikum MSc\05 Array Testing\Ref1000avg150msPortZu.txt";
 
-            string calFileName = "ILT1810343U1INS250N.txt";
-            string refFileName = "Ref1000avg150msPortZu.txt";
-            string folderName = "calib";
-            string currentLoc = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
-            string calPath = $@"{currentLoc}\{folderName}\{calFileName}";
-            string refPath = $@"{currentLoc}\{folderName}\{refFileName}";
 
             //for (int i = 0; i < config.Length; i++)
             //{
@@ -236,20 +234,19 @@ namespace ArrayTesting
             //    {
             //        if (config[i].ToLower().Contains("alib")) // AKA Kalibration | calibration
             //        {
-            //            calPath = config[i + 1];
+            //            filePaths["calibration"] = config[i + 1];
             //        }
             //        if (config[i].ToLower().Contains("ref")) // AKA Referenz | reference
             //        {
-            //            refPath = config[i + 1];
+            //            filePaths["reference"] = config[i + 1];
             //        }
             //    }
             //}
 
             await t;
 
-            integratingSphere.LoadCalibrationFile(calPath);
-            integratingSphere.LoadReferenceFile(refPath);
-
+            integratingSphere.LoadCalibrationFile(filePaths["calibration"]);
+            integratingSphere.LoadReferenceFile(filePaths["reference"]);
 
             IInputElement focusedControl = null;
 
@@ -257,9 +254,9 @@ namespace ArrayTesting
             {
                 focusedControl = FocusManager.GetFocusedElement(this);
                 Console.WriteLine("REFERENCE 1");
-                CalFilename.Text = Path.GetFileNameWithoutExtension(calPath);
+                CalFilename.Text = Path.GetFileNameWithoutExtension(filePaths["calibration"]);
                 CalFilename.Foreground = Brushes.Green;
-                CalibCombo.Text = calPath;
+                CalibCombo.Text = filePaths["calibration"];
                 CalibCombo.Focus();
                 CalibCombo.Select(CalibCombo.Text.Length, 0);
                 Console.WriteLine("REFERENCE 2");
@@ -269,9 +266,9 @@ namespace ArrayTesting
             this.Dispatcher.Invoke(() =>
             {
                 Console.WriteLine("REFERENCE 4");
-                RefFile.Text = Path.GetFileNameWithoutExtension(refPath);
+                RefFile.Text = Path.GetFileNameWithoutExtension(filePaths["reference"]);
                 RefFile.Foreground = Brushes.Green;
-                RefScanBox.Text = refPath;
+                RefScanBox.Text = filePaths["reference"];
                 RefScanBox.Focus();
                 RefScanBox.Select(CalibCombo.Text.Length, 0);
                 Console.WriteLine("REFERENCE 5");
@@ -284,10 +281,130 @@ namespace ArrayTesting
                     focusedControl.Focus();
             });
         }
+        
+        private async void ChangeMapping(object sender, RoutedEventArgs e)
+        {
+            bool[,] frame = (bool[,])EmptyFrame.Clone();
 
-       
+            //for (int k = 0; k < sMILEUSBDevice.ColCount; k++)
+            //    for (int j = 0; j < sMILEUSBDevice.RowCount; j++)
+            //        frame[j, k] = true;                
+
+            for (int k = 0; k < sMILEUSBDevice.ColCount; k++)
+                frame[k, 0] = true;
+
+            sMILEUSBDevice.SwitchPixelMapping(true);
+            sMILEUSBDevice.SendFrame(frame);
+        }
 
         private async void PulseLEDArray()
+        {
+            await Task.Run(() =>
+            {
+                sMILEUSBDevice.SwitchPixelMapping(true);
+            });
+
+            if (!arrayIsPulsing)
+            {
+                arrayIsPulsing = true;
+                //for (int i = 0; i < 180 * 6; i += 2)
+                //{
+                //    sMILEUSBDevice.SetVoltage(1300 + (uint)(2000 * Math.Pow(Math.Abs(Math.Cos((double)i * Math.PI / 180)), 0.2)));
+                //    await Task.Delay(10);
+                //}
+                //sMILEUSBDevice.SetVoltage(3300);
+
+                // turn all pixel on
+                bool[,] frame = (bool[,])EmptyFrame.Clone();
+
+                //for (int k = 0; k < sMILEUSBDevice.ColCount; k++)
+                //    for (int j = 0; j < sMILEUSBDevice.RowCount; j++)
+                //        frame[j, k] = true;                
+
+                for (int k = 0; k < sMILEUSBDevice.ColCount; k++)
+                        frame[k, 0] = true;
+
+                await Task.Run(() =>
+                {
+                    sMILEUSBDevice.SendFrame(frame);
+                });
+
+                arrayIsPulsing = false;
+            }
+        }
+
+        private async void AlternatingLines(object sender, RoutedEventArgs e)
+        {
+            sMILEUSBDevice.SwitchPixelMapping(false);
+            if (!arrayIsPulsing)
+            {
+                arrayIsPulsing = true;
+
+                bool[,] frameEven = (bool[,])EmptyFrame.Clone();
+                bool[,] frameOdd = (bool[,])EmptyFrame.Clone();
+
+                for (int i = 0; i < sMILEUSBDevice.RowCount; i++)
+                    for (int j = 0; j < sMILEUSBDevice.ColCount; j++)
+                        if (i % 2 == 0)
+                            frameEven[j, i] = true;
+                        else
+                            frameOdd[j, i] = true;
+
+                for (int k = 0; k < 10; k++)
+                {
+                    await Task.Run(() =>
+                    {
+                        sMILEUSBDevice.SendFrame(frameEven);
+                    });
+
+                    await Task.Delay(500);
+
+                    await Task.Run(() =>
+                    {
+                        sMILEUSBDevice.SendFrame(frameOdd);
+                    });
+
+                    await Task.Delay(500);
+                }
+
+                arrayIsPulsing = false;
+            }
+        }
+        private async void Snake(object sender, RoutedEventArgs e)
+        {
+            if (!arrayIsPulsing)
+            {
+                arrayIsPulsing = true;
+
+                bool[,] frame = (bool[,])EmptyFrame.Clone();
+                bool direction = true; // true for left to right, false for right to left
+
+                for (int i = 0; i < sMILEUSBDevice.RowCount; i++)
+                {
+                    for (int j = 0; j < sMILEUSBDevice.ColCount; j++)
+                    {
+                        int col = direction ? j : sMILEUSBDevice.ColCount - 1 - j;
+                        frame[i, col] = true;
+
+                        await Task.Run(() =>
+                        {
+                            sMILEUSBDevice.SendFrame((bool[,])frame.Clone());
+                        });
+
+                        await Task.Delay(200); // delay to control speed
+
+                        frame[i, col] = false;
+                    }
+
+                    direction = !direction;
+                }
+
+                arrayIsPulsing = false;
+            }
+        }
+
+
+        private async void PulseLEDArrays()
         {
             if (!arrayIsPulsing)
             {
@@ -341,6 +458,7 @@ namespace ArrayTesting
                     sMILEUSBDevice.Dispose();
                 });
             }
+            ArrayConnectStatus = false;
             TextArrayStatus.Text = "Getrennt";
             TextArrayStatus.Foreground = Brushes.Red;
             TextArrayType.Text = "";
@@ -348,31 +466,32 @@ namespace ArrayTesting
 
         async Task SpecShutdown()
         {
-            if (integratingSphere != null)
+            if (integratingSphere != null && integratingSphere.IsConnected())
                 await Task.Factory.StartNew(() => integratingSphere.DisconnectIntegratingSphere());
             UpdateSpecInfo();
+            UpdateSpecText();
         }
 
 
 
 
-//         if (!spectrometerRunning)
-//            {
-//                spectrometerRunning = true;
-//                int counter = 0;
-//                while(spectrometerRunning)
-//                {
-//                    Task ScanTask = Task.Factory.StartNew(() => integratingSphere.SingleScan());
-//        await ScanTask;
-//        //await integratingSphere.SingleScan();
-//        connectButton.Content = (Math.Round(integratingSphere.GetScanDataAbsoluteAt(471) * 100) / 100).ToString() + " µW/nm/cm²";
-//                    counter++;
-//                    //await Task.Delay(50);
-//                    if (counter >= 10) spectrometerRunning = false;
-//                    ///connectButton.Content = GetNewScanDataAbsoluteAt(471).ToString() + " µW/nm/cm²";
-//                }
-//}
-//            else spectrometerRunning = false;
+        //         if (!spectrometerRunning)
+        //            {
+        //                spectrometerRunning = true;
+        //                int counter = 0;
+        //                while(spectrometerRunning)
+        //                {
+        //                    Task ScanTask = Task.Factory.StartNew(() => integratingSphere.SingleScan());
+        //        await ScanTask;
+        //        //await integratingSphere.SingleScan();
+        //        connectButton.Content = (Math.Round(integratingSphere.GetScanDataAbsoluteAt(471) * 100) / 100).ToString() + " µW/nm/cm²";
+        //                    counter++;
+        //                    //await Task.Delay(50);
+        //                    if (counter >= 10) spectrometerRunning = false;
+        //                    ///connectButton.Content = GetNewScanDataAbsoluteAt(471).ToString() + " µW/nm/cm²";
+        //                }
+        //}
+        //            else spectrometerRunning = false;
 
         private void Spannung_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -396,7 +515,7 @@ namespace ArrayTesting
             
             uint voltage = (uint)(Voltage_Slider.Value);
 
-            if (arraySize == 8) VoltagePostfix.Text = (voltage / 1000.0).ToString("N3") + "V";
+            if (arraySize == 8 && VoltagePostfix != null) VoltagePostfix.Text = (voltage / 1000.0).ToString("N3") + "V";
 
             //Console.WriteLine(myInt);
             if (sMILEUSBDevice != null)
@@ -425,82 +544,6 @@ namespace ArrayTesting
             //}
         }
 
-        
-
-        // DIRTY CODE
-        private async void SpecRemovalChecker()
-        {
-            //bool connectTabEnabled = true;
-            //this.Dispatcher.Invoke(() =>
-            //{
-            //    connectTabEnabled = connectTab.IsSelected;
-            //});
-            //if (connectTabEnabled)
-            //{
-
-                //string specSer = "6&1402B392&0&4"; // 5&69573AC&0&2
-                string vid = "1992", pid = "0667"; //  VID_1992 & PID_0667
-                bool specFound = false, arrayFound = false;
-                //public bool IsUsbDeviceConnected(string pid, string vid)
-                //{
-                using (var searcher =
-                  new ManagementObjectSearcher(@"Select * From Win32_USBControllerDevice"))
-                {
-                    using (var collection = searcher.Get())
-                    {
-                        foreach (var device in collection)
-                        {
-                            var usbDevice = Convert.ToString(device);
-                            //if (usbDevice.Contains("USB"))
-                            //    Console.WriteLine(usbDevice);
-                            
-                            if (usbDevice.Contains(pid) && usbDevice.Contains(vid))
-                            //if (usbDevice.Contains(specSer))
-                            {
-                                //integratingSphere is connected
-                                //this.Dispatcher.Invoke(() =>
-                                //{
-                                //    Console.WriteLine("Spektrometer ist verbunden.");
-                                //});
-                                
-                                specFound = true;
-                            }
-                        }
-                    }
-                }
-
-                if (!specFound)
-                {
-                    try
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            TextSpecStatus.Text = "Getrennt";
-                            TextSpecStatus.Foreground = Brushes.Red;
-                            InfoMessage.Text = "Spektrometer ist getrennt.";
-                        });
-                    }
-                    catch(System.Threading.Tasks.TaskCanceledException)
-                    {
-                    
-                    }
-                }
-
-                //try
-                //{
-                //    await Task.Delay(2000, cts.Token);
-                //}
-                //catch(TaskCanceledException)
-                //{
-                //    break;
-                //}
-
-                //this.Dispatcher.Invoke(() =>
-                //{   
-                //    connectTabEnabled = connectTab.IsSelected;
-                //});
-            //}
-        }
 
         private async void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -772,7 +815,7 @@ namespace ArrayTesting
    
         private async Task DoDarkScan()
         {
-            if (integratingSphere != null)
+            if (integratingSphere != null && integratingSphere.IsConnected())
             {
                 if(ArrayOffAtDarkScanCheckBox.IsChecked ?? false) if (ArrayConnectStatus) sMILEUSBDevice.SendFrame(EmptyFrame);
                 Task d = Task.Delay(20);
@@ -786,7 +829,7 @@ namespace ArrayTesting
 
         private async Task<double[][]> ScanAndGetAbsData(bool useRef)
         {
-            if (integratingSphere != null)
+            if (integratingSphere != null && integratingSphere.IsConnected())
             {
                 await integratingSphere.SingleScan();
                 return new double[][] { integratingSphere.GetCalibratedAbsoluteDataX(), integratingSphere.GetCalibratedAbsoluteDataY(useRef) };
@@ -886,7 +929,7 @@ namespace ArrayTesting
             UpdateExportPath();
         }
 
-        private void UpdateExportPath()
+        private void UpdateExportPath(String filedialogpath = null)
         {
             string voltageComment = String.Empty;
             if (VoltagePostfix.Text != null)
@@ -895,7 +938,8 @@ namespace ArrayTesting
             if (SerialTextBox.Text != null)
                 ser = SerialTextBox.Text;
 
-            string sbPathShow = ExportComboBox.Text;
+            string sbPathShow = filedialogpath is null ? ExportComboBox.Text : filedialogpath;
+          
 
             
             sbPathShow += (ser == String.Empty) ? String.Empty : (@"\SN " + ser);
@@ -981,6 +1025,10 @@ namespace ArrayTesting
             catch (FormatException)
             {
                 Console.WriteLine($"Unable to parse '{input}'");
+            }            
+            catch (System.OverflowException)
+            {
+                Console.WriteLine($"Unable to parse '{input}'");
             }
             return result;
         }
@@ -998,12 +1046,25 @@ namespace ArrayTesting
             }
         }
 
+        private void IntegrationTimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (IntegrationTimeTextBox is null || AveragingTextBox is null) return;
+
+            UpdateSpecConfig((int?)ParseDoubleFromString(IntegrationTimeTextBox.Text), (int?)ParseDoubleFromString(AveragingTextBox.Text));
+        }
+
         private void AveragingTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
                 UpdateSpecConfig((int?)ParseDoubleFromString(IntegrationTimeTextBox.Text), (int?)ParseDoubleFromString(AveragingTextBox.Text));
             }
+        }
+
+        private void AveragingTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (IntegrationTimeTextBox is null || AveragingTextBox is null) return;
+            UpdateSpecConfig((int?)ParseDoubleFromString(IntegrationTimeTextBox.Text), (int?)ParseDoubleFromString(AveragingTextBox.Text));
         }
 
         private async Task UpdateSpecConfig(int? intTime, int? avgValue, bool forceDarkScan = false)
@@ -1055,32 +1116,32 @@ namespace ArrayTesting
             for (int i = 0; i < dataX.Length; i++)
                 if (dataX[i] > 300 && dataX[i] < 600) // plot area
                     cv.Add(new ObservablePoint(Math.Round(dataX[i], 2), Math.Round(dataY[i], 2)));
-           
-            this.Dispatcher.Invoke(() =>
-            {
-                MyScatter.Title = title;
-                MyScatter.Values = cv;
-                if (SerCol == null)
-                    SerCol = new SeriesCollection();
-                else
+
+            try { 
+                Action invokeNotifification = () =>
                 {
-                    SerCol.Clear();
-                    SerCol.Add(MyScatter);
-                }
-                SpectrumPlot.Series = SerCol;
-            //SerCol.
-            ////SerCol.Clear();
-            //SerCol.Insert(0, new LineSeries()
-            //{
-            //    Title = title,
-            //    Values = cv,
-            //    PointGeometry = null,
-            //});
-            //Thread.Sleep(10);
-            //if(SerCol.Count > 1)
-            //    SerCol.RemoveAt(1);
-            });
-        }
+
+                    MyScatter.Title = title;
+                    MyScatter.Values = cv;
+                    if (SerCol is null)
+                        SerCol = new SeriesCollection();
+                    else
+                    {
+                        //SerCol.Clear();
+                        SerCol.Add(MyScatter);
+                    }
+                    SpectrumPlot.Series = SerCol;
+
+                    int maxValueIndex = Array.IndexOf(dataY, dataY.Max());
+                    double xValueAtMax = dataX[maxValueIndex];
+                    TextBlockSpektrumMax.Text = $"max={xValueAtMax} nm";
+                };
+                Application.Current.Dispatcher.BeginInvoke(invokeNotifification);
+            } catch(NullReferenceException ne)
+            {
+                Console.WriteLine("Error PlotData: " + ne);
+            }
+         }
 
         private void CalibCombo_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -1091,6 +1152,8 @@ namespace ArrayTesting
 
         async Task<double> DarkTests(List<string> darkSummary, int lower, int upper)
         {
+            if (!DEVICES_READY) return -1.0;
+
             // NOISE PROPERTIES
             // 16x dark scan + integration
             if (sMILEUSBDevice != null && ArrayConnectStatus) sMILEUSBDevice.SendFrame(EmptyFrame);
@@ -1222,6 +1285,8 @@ namespace ArrayTesting
 
         private async void Button_Click_20(object sender, RoutedEventArgs e)
         {
+            if (!DEVICES_READY) return;
+
             VoltageScanButton.IsEnabled = false;
             StartScanButton.IsEnabled = false;
             StopButton.IsEnabled = true;
@@ -1283,6 +1348,32 @@ namespace ArrayTesting
                 Console.WriteLine("timer val set to " + IntTimeSlider.Value);
             }
         }
+
+        private void FileDialogButton_Click(object sender, RoutedEventArgs e)
+        {
+            String filedialogpath = GetFolderDialog();
+            if (filedialogpath is null) return;
+
+            UpdateExportPath(filedialogpath);
+        }
+
+        public static string GetFolderDialog()
+        {
+            System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
+            folderBrowser.ValidateNames = false;
+            folderBrowser.CheckFileExists = false;
+            folderBrowser.CheckPathExists = true;
+            folderBrowser.FileName = "Select a Folder";
+            folderBrowser.InitialDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string folderPath = Path.GetDirectoryName(folderBrowser.FileName);
+                return folderPath;
+
+            }
+            return null;
+        }
+
 
         private async Task SetSinglePixel(int x, int y)
         {

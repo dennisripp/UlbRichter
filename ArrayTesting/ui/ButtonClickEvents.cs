@@ -61,6 +61,8 @@ namespace ArrayTesting
 
         private async void Button_Click_6(object sender, RoutedEventArgs e)
         {
+            if (!DEVICES_READY) return;
+
             bool vScanWasEnabled = VoltageScanButton.IsEnabled;
             if (vScanWasEnabled) VoltageScanButton.IsEnabled = false;
             StartScanButton.IsEnabled = false;
@@ -87,10 +89,13 @@ namespace ArrayTesting
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
+            if (!DEVICES_READY) return;
+
             DoDarkScan();
         }
         private async void Button_Click_8(object sender, RoutedEventArgs e)
         {
+            if (!DEVICES_READY) return; 
             //dataArrayToFile(new double[][] { new double[] { 1, 2 }, new double[] { 3, 4 } }, @"C:\Users\admin\PowerFolders\Praktikum MSc\05 Array Testing\ArrayTesting\" + DateTime.Now.Ticks + "test123.txt");
             //dataArrayToFile(new double[][] { new double[] { 1, 2 }, new double[] { 3, 4 } }, expPathGen.GeneratePath("Test"));
             //await integratingSphere.SingleScan();
@@ -267,12 +272,10 @@ namespace ArrayTesting
         }
         private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            aTimer.Enabled = false;
             await SpecShutdown();
             UpdateDarkScanStatus();
             //Task InitSpecTask = Task.Factory.StartNew(() => InitSpecAsync());
             await InitSpecAsync();
-            aTimer.Enabled = true;
             UpdateSpecText();
         }
 
@@ -303,6 +306,8 @@ namespace ArrayTesting
 
         private async void Button_Click_17(object sender, RoutedEventArgs e)
         {
+            if (!DEVICES_READY) return;
+
             int lower = 400;
             int upper = 550;
             lower = (int)ParseDoubleFromString(IntegrationLower.Text);
@@ -314,21 +319,50 @@ namespace ArrayTesting
 
         private async void Button_Click_18(object sender, RoutedEventArgs e)
         {
-            //UpdateSpecConfig((int?)ParseDoubleFromString(IntegrationTimeTextBox.Text), (int?)ParseDoubleFromString(AveragingTextBox.Text));
-            int? x = (int?)ParseDoubleFromString(Xcol.Text), y = (int?)ParseDoubleFromString(Ylin.Text);
-            if (x != null && y != null)
-            {
-                await SetSinglePixel((int)x, (int)y);
-                InfoMessage.Text = "Einzelnen Pixel (" + x + ", " + y + ") aktiviert.";
-            }
-            else
-                InfoMessage.Text = "Frame nicht aktualisiert. Fehlerhafte Eingabe.";
+            if (sMILEUSBDevice is null) return;
+
+            int? parsed_x_val = (int?)ParseDoubleFromString(Xcol.Text);
+            int? parsed_y_val = (int?)ParseDoubleFromString(Ylin.Text);
+            int x = parsed_x_val is null || parsed_x_val > sMILEUSBDevice.ColCount - 1 ? sMILEUSBDevice.ColCount - 1 : (int)parsed_x_val;
+            int y = parsed_y_val is null || parsed_y_val > sMILEUSBDevice.RowCount - 1 ? sMILEUSBDevice.RowCount - 1 : (int)parsed_y_val;
+            Xcol.Text = x.ToString();
+            Ylin.Text = y.ToString();
+            await SetSinglePixel(x, y);
+            InfoMessage.Text = "Einzelnen Pixel (" + x + ", " + y + ") aktiviert.";
         }
 
 
 
+        private void TextBox_PreviewTextInputOnlyDigits(object sender, TextCompositionEventArgs e)
+        {
+            // If the input is not a digit, handle the event to prevent the input from being processed
+            e.Handled = !char.IsDigit(e.Text, 0);
+        }
 
+        private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(typeof(String)))
+            {
+                String text = (String)e.DataObject.GetData(typeof(String));
+                if (!IsTextAllowed(text))
+                {
+                    e.CancelCommand();
+                }
+            }
+            else
+            {
+                e.CancelCommand();
+            }
+        }
 
+        private static bool IsTextAllowed(string text)
+        {
+            foreach (char c in text)
+            {
+                if (!Char.IsDigit(c)) return false;
+            }
 
+            return true;
+        }
     }
 }

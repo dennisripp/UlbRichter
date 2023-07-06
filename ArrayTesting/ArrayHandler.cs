@@ -145,8 +145,6 @@ namespace ArrayTesting
         {
             Action invokeNotifification = () =>
             {
-
-
                 if (ArrayConnectStatus)
                 {
                     //this.Dispatcher.Invoke(() =>
@@ -186,11 +184,9 @@ namespace ArrayTesting
             return true;
         }
 
-        private async void InitArray(int voltage)
+        private async void InitArray(int voltage = 3300)
         {
             await ArrayConnectAuto();
-
-
         }
     }
 }
