@@ -20,11 +20,11 @@ using System.Globalization;
 using LiveCharts.Wpf;
 using System.Timers;
 using System.Linq;
+using System.Media;
 using System.Windows.Media.Imaging;
 using Enterwell.Clients.Wpf.Notifications;
 using System.Reflection;
-
-
+using System.Windows.Threading;
 
 namespace ArrayTesting
 {
@@ -283,6 +283,12 @@ namespace ArrayTesting
         }
         
         private async void ChangeMapping(object sender, RoutedEventArgs e)
+        {
+            ChangeMapping();
+        }
+
+
+        public void ChangeMapping()
         {
             bool[,] frame = (bool[,])EmptyFrame.Clone();
 
@@ -572,6 +578,10 @@ namespace ArrayTesting
             string ledSize = "";
             string ledpitch = "";
             string ledwl = "";
+            // GET DARK MEASUREMENT CHARACTERISTICS
+            List<string> darkSummary = new List<string> { };
+            double DIEtotenschwelle = await DarkTests(darkSummary, lower, upper);
+
             this.Dispatcher.Invoke(() =>
             {
                 RoutineProgress.Value = 0;
@@ -589,6 +599,8 @@ namespace ArrayTesting
                 ledSize = LEDSizeBox.Text;
                 ledpitch = PitchBox.Text;
                 ledwl = WavelengthBox.Text;
+                HeatSeries.Values.Clear();
+                Output.Text = String.Join("\n", darkSummary);
             });
 
             int pixels = arraySize * arraySize;
@@ -597,72 +609,76 @@ namespace ArrayTesting
             double[] pixelY = new double[pixels];
             double[] powerResults = new double[pixels];
 
-            // GET DARK MEASUREMENT CHARACTERISTICS
-            List<string> darkSummary = new List<string> { };
-            double DIEtotenschwelle = await DarkTests(darkSummary, lower, upper);
-
-            this.Dispatcher.Invoke(() =>
-            {
-                HeatSeries.Values.Clear();
-                Output.Text = String.Join("\n", darkSummary);
-            });
-
             darkSummary.Insert(0, "====== TOTE PIXEL =======");
 
-            
-            // cycle through pixels
+
+            List<HeatPoint> heatPointsBatch = new List<HeatPoint>();
+            int updateInterval = arraySize * arraySize / 4; // update the UI every quarter of the full grid
             for (int i = 0; i < arraySize; i++) // i = y
             {
                 for (int j = 0; j < arraySize; j++) // j = x
                 {
                     await SetSinglePixel(j, i);
-                    await Task.Delay(delay); // WANN KOMMT EIN FRAME AN?!
+                    await Task.Delay(delay);
 
                     double[][] results = await ScanAndGetAbsData(useReference);
-                    DataArrayToFile(results, expPathGen.GeneratePath("Spektrum Pixel("+j+", "+i+")"));
-                    
+                    DataArrayToFile(results, expPathGen.GeneratePath("Spektrum Pixel(" + j + ", " + i + ")"));
+
                     // power calculation
                     double sum = Integrate(results[0], results[1], lower, upper);
-                    //Console.WriteLine("Leistung: Integral von 400-550" + sum);
-                    
+
                     powerResults[measuredDataPoints] = sum;
                     pixelX[measuredDataPoints] = j;
                     pixelY[measuredDataPoints] = i;
-
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        HeatSeries.Values.Add(new HeatPoint(j, arraySize - 1 - i, (int)sum));
-                    });
-
                     measuredDataPoints++;
-                    this.Dispatcher.Invoke(() =>
+
+                    // Save the current point's data for later heatmap update
+                    heatPointsBatch.Add(new HeatPoint(j, arraySize - 1 - i, (int)sum));
+
+                    // Only update the UI every updateInterval measurements
+                    if (true || measuredDataPoints % updateInterval == 0)
                     {
-                        //    OutputText.Text = Math.Round(integratingSphere.GetScanDataAbsoluteAt(471), digits: 2).ToString() + " µW/nm/cm²";
-                        RoutineProgress.Value = 100.0 * (double)measuredDataPoints / (double)pixels;
-                    });
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            // Add all heat points from the batch to the heatmap
+                            foreach (HeatPoint point in heatPointsBatch)
+                            {
+                                HeatSeries.Values.Add(point);
+                            }
+                            // Clear the batch
+                            heatPointsBatch.Clear();
+
+                            // Update the progress
+                            RoutineProgress.Value = 100.0 * (double)measuredDataPoints / (double)pixels;
+                        });
+                    }
+
                     if (t.IsCancellationRequested) break;
                 }
                 if (t.IsCancellationRequested) break;
             }
+            double[][] heatmap = new double[][] { (double[])pixelX, pixelY, powerResults };
+
+            this.Dispatcher.Invoke(() =>
+            {
+                // Add all heat points from the batch to the heatmap
+                foreach (HeatPoint point in heatPointsBatch)
+                {
+                    HeatSeries.Values.Add(point);
+                }
+
+                // Clear the batch
+                heatPointsBatch.Clear();
+
+                // Update the progress
+                RoutineProgress.Value = 100.0 * (double)measuredDataPoints / (double)pixels;
+                // Write heatmap file
+                DataArrayToFile(heatmap, expPathGen.GeneratePath("B Heatmap"));
+            });
+ 
+
             if (!t.IsCancellationRequested)
             {
-                // rewrite heatmap
-                //this.Dispatcher.Invoke(() =>
-                //{
-                //    int index = 0;
-                //    for (int i = 0; i < arraySize; i++)
-                //    {
-                //        for (int j = 0; j < arraySize; j++)
-                //        {
-                //            Values.Add(new HeatPoint(j, arraySize - 1 - i, (int)powerResults[index]));
-                //            index++;
-                //        }
-                //    }
-                //});
-
-                // Write heatmap file
-                double[][] heatmap = new double[][] { (double[])pixelX, pixelY, powerResults };
-                DataArrayToFile(heatmap, expPathGen.GeneratePath("B Heatmap"));
 
                 // AUSWERTUNG 1
                 double powerMax = 0;
@@ -760,36 +776,73 @@ namespace ArrayTesting
                 if (ledSizeDoubleNull != null)
                     ledSizeDouble = (double)ledSizeDoubleNull;
 
-                summary.Add("====== AUSWERTUNG =======");
-                summary.Add("Lebendige Pixel:\t" + alivePixelCount);
-                summary.Add("Ausgefallene Pixel:\t" + deadPixelCount);
-                summary.Add("---- nur Leuchtpixel ----");
-                summary.Add("Durchschnittliche Leistung je Pixel:\t" + Math.Round(avgAlivePower, 3) + " ± " + Math.Round(stdDevAlivePower, 3) + " µW");
-                if(ledSizeDoubleNull != null)
-                    summary.Add("Spezifische Ausstrahlung je Pixel:\t" + Math.Round(avgAlivePower/ledSizeDouble/ ledSizeDouble *1000, 3) + " nW/(µm)²");
 
-                summary.Add("Maximale Leistung bei Pixel (" + heatmap[0][powerMaxIndex] + "," + heatmap[1][powerMaxIndex] + "):\t" + Math.Round(heatmap[2][powerMaxIndex], 3) + " µW");
-                if (ledSizeDoubleNull != null)
-                    summary.Add("Maximale Spezifische Ausstrahlung:\t" + Math.Round(heatmap[2][powerMaxIndex] / ledSizeDouble / ledSizeDouble * 1000, 3) + " nW/(µm)²");
+                try { 
+                    summary.Add("====== AUSWERTUNG =======");
+                    summary.Add("Lebendige Pixel:\t" + alivePixelCount);
+                    summary.Add("Ausgefallene Pixel:\t" + deadPixelCount);
+                    summary.Add("---- nur Leuchtpixel ----");
+                    summary.Add("Durchschnittliche Leistung je Pixel:\t" + Math.Round(avgAlivePower, 3) + " ± " + Math.Round(stdDevAlivePower, 3) + " µW");
+                    if(ledSizeDoubleNull != null)
+                        summary.Add("Spezifische Ausstrahlung je Pixel:\t" + Math.Round(avgAlivePower/ledSizeDouble/ ledSizeDouble *1000, 3) + " nW/(µm)²");
 
-                summary.Add("---- Gesamtleistung -----");
-                summary.Add("Alle Pixel simultan:\t\t\t" + Math.Round(sumFull, 3) + " µW");
-                if (ledSizeDoubleNull != null)
-                    summary.Add("Spezifische Ausstrahlung (unsicher):\t" + Math.Round(sumFull / ledSizeDouble / ledSizeDouble * 1000 / alivePixelCount, 3) + " nW/(µm)²");
+                    summary.Add("Maximale Leistung bei Pixel (" + heatmap[0][powerMaxIndex] + "," + heatmap[1][powerMaxIndex] + "):\t" + Math.Round(heatmap[2][powerMaxIndex], 3) + " µW");
+                    if (ledSizeDoubleNull != null)
+                        summary.Add("Maximale Spezifische Ausstrahlung:\t" + Math.Round(heatmap[2][powerMaxIndex] / ledSizeDouble / ledSizeDouble * 1000, 3) + " nW/(µm)²");
 
-                summary.Add("Alle lebendigen simultan:\t\t" + Math.Round(sumFullAlive, 3) + " µW");
-                if (ledSizeDoubleNull != null)
-                    summary.Add("Spezifische Ausstrahlung (unsicher):\t" + Math.Round(sumFullAlive / ledSizeDouble / ledSizeDouble * 1000 / alivePixelCount, 3) + " nW/(µm)²");
+                    summary.Add("---- Gesamtleistung -----");
+                    summary.Add("Alle Pixel simultan:\t\t\t" + Math.Round(sumFull, 3) + " µW");
+                    if (ledSizeDoubleNull != null)
+                        summary.Add("Spezifische Ausstrahlung (unsicher):\t" + Math.Round(sumFull / ledSizeDouble / ledSizeDouble * 1000 / alivePixelCount, 3) + " nW/(µm)²");
+
+                    summary.Add("Alle lebendigen simultan:\t\t" + Math.Round(sumFullAlive, 3) + " µW");
+                    if (ledSizeDoubleNull != null)
+                        summary.Add("Spezifische Ausstrahlung (unsicher):\t" + Math.Round(sumFullAlive / ledSizeDouble / ledSizeDouble * 1000 / alivePixelCount, 3) + " nW/(µm)²");
 
 
-                summary.AddRange(darkSummary);
-
+                    summary.AddRange(darkSummary);
+                } catch(IndexOutOfRangeException e)
+                {
+                    summary.Add($"\n\n EXCEPTION MSG: {e} \n\n");
+                }
                 StringsToFile(summary, expPathGen.GeneratePath("A Zusammenfassung"));
 
-                this.Dispatcher.Invoke(() =>
+                
+                Application.Current.Dispatcher.Invoke(() =>
                 {
                     Output.Text = String.Join("\n", summary);
-                    HeatmapToFile(expPathGen.GeneratePath("B Heatmap", ".png"));
+
+                    int Height = (int)this.HeatmapGrid.ActualHeight;
+                    int Width = (int)this.HeatmapGrid.ActualWidth;
+                    double resolutionScale = 300 / 96;
+
+                    RenderTargetBitmap bitmap = new RenderTargetBitmap((int)(resolutionScale * (Width + 1)),
+                    (int)(resolutionScale * (Height + 1)),
+                    resolutionScale * 96,
+                    resolutionScale * 96, PixelFormats.Default);
+
+                    bitmap.Render(this.HeatmapGrid);
+
+                    string file = expPathGen.GeneratePath("B Heatmap", ".png");
+                    string Extension = System.IO.Path.GetExtension(file).ToLower();
+
+                    BitmapEncoder encoder;
+                    if (Extension == ".gif")
+                        encoder = new GifBitmapEncoder();
+                    else if (Extension == ".png")
+                        encoder = new PngBitmapEncoder();
+                    else if (Extension == ".jpg")
+                        encoder = new JpegBitmapEncoder();
+                    else
+                        return;
+
+                    encoder.Frames.Add(BitmapFrame.Create(bitmap));
+
+                    using (Stream stm = File.Create(file))
+                    {
+                        encoder.Save(stm);
+                    }
+
                 });
             }
         }
@@ -1132,7 +1185,18 @@ namespace ArrayTesting
                     }
                     SpectrumPlot.Series = SerCol;
 
-                    int maxValueIndex = Array.IndexOf(dataY, dataY.Max());
+                    // Filter dataY values where corresponding dataX values are between 300 and 600
+                    List<double> filteredDataY = new List<double>();
+                    for (int i = 0; i < dataX.Length; i++)
+                    {
+                        if (dataX[i] >= 300 && dataX[i] <= 600)
+                        {
+                            filteredDataY.Add(dataY[i]);
+                        }
+                    }
+
+                    // Now get the maximum from the filtered data
+                    int maxValueIndex = Array.IndexOf(dataY, filteredDataY.Max());
                     double xValueAtMax = dataX[maxValueIndex];
                     TextBlockSpektrumMax.Text = $"max={xValueAtMax} nm";
                 };
@@ -1313,8 +1377,8 @@ namespace ArrayTesting
                 Voltage_Slider.Value = setVoltage;
                 await Task.Delay(delay);
 
-                await Task.Run(() => PixelScan((int)delay, useReference, cts.Token));
-                
+                await PixelScan((int)delay, useReference, cts.Token);
+               
                 setVoltage += stepVoltage;
 
                 if (cts.IsCancellationRequested) break;
@@ -1322,6 +1386,8 @@ namespace ArrayTesting
 
             Voltage_Slider.Value = voltageTmp;
 
+            SystemSounds.Beep.Play(); // This will play the system beep sound
+            await Task.Delay(1000); // Wait for 1 second
             VoltageScanButton.IsEnabled = true;
             StartScanButton.IsEnabled = true;
             StopButton.IsEnabled = false;

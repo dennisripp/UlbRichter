@@ -178,6 +178,10 @@ namespace ArrayTesting
                 Action Invoke = () =>
                 {
                     ArrayConnectStatus = sMILEUSBDevice.Connect(com);
+                    if(sMILEUSBDevice.Hardware == Hardware.Demo8x8 && sMILEUSBDevice.ControllerMemory == ControllerMemory._192kb)
+                    {
+                        ChangeMapping();
+                    }
                 };
                 await System.Windows.Application.Current.Dispatcher.BeginInvoke(Invoke);
             }

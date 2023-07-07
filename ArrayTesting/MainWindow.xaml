@@ -109,14 +109,14 @@
                     <TextBlock HorizontalAlignment="Left" Margin="84,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="bi"/><Run Text="s"/></TextBlock>
                     <TextBlock HorizontalAlignment="Left" Margin="62,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="nm"/>
                     <TextBlock HorizontalAlignment="Left" Margin="156,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="nm"/>
-                    <TextBox x:Name="DelayTextBox" HorizontalAlignment="Left" Height="23" Margin="77,138,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="29" DataObject.Pasting="TextBox_Pasting" PreviewTextInput="TextBox_PreviewTextInputOnlyDigits"/>
+                    <TextBox x:Name="DelayTextBox" HorizontalAlignment="Left" Height="23" Margin="77,138,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="29" DataObject.Pasting="TextBox_Pasting" PreviewTextInput="TextBox_PreviewTextInputOnlyDigits"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,139,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="Array"/><Run Text="-Delay"/></TextBlock>
                     <CheckBox Content="Auswertung" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top" FontWeight="Bold" IsChecked="True"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right"><Run FontStyle="Italic" Text="mit Enter best. "/><Run Text="↓"/></TextBlock>
                     <TextBlock HorizontalAlignment="Left" Margin="111,139,0,0" TextWrapping="Wrap" Text="ms" VerticalAlignment="Top" FontWeight="Bold"/>
                     <Button x:Name="StopButton" Content="Scan stoppen!" HorizontalAlignment="Left" Margin="10,341,0,0" VerticalAlignment="Top" Width="187" FontWeight="Bold" Foreground="#FFD10000" Click="Button_Click_11"/>
                     <Button x:Name="VoltageScanButton" Content="Spannungsreihe scannen (nur 8x8)" HorizontalAlignment="Left" Margin="10,301,0,0" VerticalAlignment="Top" Width="187" IsEnabled="False" Click="Button_Click_20"/>
-                    <TextBox x:Name="FromVoltage" HorizontalAlignment="Left" Height="21" Margin="10,275,0,0" TextWrapping="Wrap" Text="3500" VerticalAlignment="Top" Width="32" PreviewTextInput="TextBox_PreviewTextInputOnlyDigits"/>
+                    <TextBox x:Name="FromVoltage" HorizontalAlignment="Left" Height="21" Margin="10,275,0,0" TextWrapping="Wrap" Text="4000" VerticalAlignment="Top" Width="32" PreviewTextInput="TextBox_PreviewTextInputOnlyDigits"/>
                     <TextBox x:Name="ToVoltage" HorizontalAlignment="Left" Height="21" Margin="78,275,0,0" TextWrapping="Wrap" Text="2500" VerticalAlignment="Top" Width="32" PreviewTextInput="TextBox_PreviewTextInputOnlyDigits"/>
                     <TextBlock HorizontalAlignment="Left" Margin="47,276,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="mV "/><Run Text="-"/></TextBlock>
                     <TextBlock HorizontalAlignment="Left" Margin="115,276,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="mV"/><Run Text=" "/><Run Text="/"/></TextBlock>
